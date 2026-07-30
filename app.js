@@ -1,8 +1,8 @@
 /* ==========================================================================
-   Smart Expense Tracker - Application Core Logic
+   Fresh Grass Green Expense Tracker - Application Core Logic
    ========================================================================== */
 
-// --- Default Categories & Budgets ---
+// Default Categories & Budgets
 const DEFAULT_BUDGETS = {
   '餐飲': 8000,
   '交通': 3000,
@@ -17,7 +17,6 @@ const DEFAULT_BUDGETS = {
   '其他支出': 2000
 };
 
-// Category Icons Map
 const CATEGORY_ICONS = {
   '餐飲': 'fa-utensils',
   '交通': 'fa-bus',
@@ -35,7 +34,6 @@ const CATEGORY_ICONS = {
   '其他支出': 'fa-receipt'
 };
 
-// Initial Seed Data for First-Time Users
 const INITIAL_TRANSACTIONS = [
   { id: 'tx-1', date: '2026-07-05', type: 'income', nature: 'income', category: '薪資收入', amount: 60000, payment: '銀行轉帳', description: '七月份公司發薪' },
   { id: 'tx-2', date: '2026-07-06', type: 'expense', nature: 'fixed-monthly', category: '電信費', amount: 999, payment: '信用卡', description: '電信5G月租費' },
@@ -55,20 +53,21 @@ const INITIAL_TRANSACTIONS = [
 // App State
 let transactions = [];
 let budgets = {};
+let activeTab = 'tab-dashboard';
 let dailyTrendChart = null;
 let fixedVsVarChart = null;
 let categoryPieChart = null;
 let currentScannedData = null;
 
-// --- Initialize Application ---
+// --- Initialize App ---
 document.addEventListener('DOMContentLoaded', () => {
   loadDataFromStorage();
   initCategoryDropdowns();
+  setupTabNavigation();
   setupEventListeners();
   renderApp();
 });
 
-// Load Data from LocalStorage
 function loadDataFromStorage() {
   const savedTx = localStorage.getItem('smart_expense_transactions');
   const savedBudgets = localStorage.getItem('smart_expense_budgets');
@@ -77,13 +76,11 @@ function loadDataFromStorage() {
   budgets = savedBudgets ? JSON.parse(savedBudgets) : DEFAULT_BUDGETS;
 }
 
-// Save State to LocalStorage
 function saveDataToStorage() {
   localStorage.setItem('smart_expense_transactions', JSON.stringify(transactions));
   localStorage.setItem('smart_expense_budgets', JSON.stringify(budgets));
 }
 
-// Populate Category Dropdowns
 function initCategoryDropdowns() {
   const txCategorySelect = document.getElementById('tx-category');
   const filterCategorySelect = document.getElementById('filter-category');
@@ -91,28 +88,72 @@ function initCategoryDropdowns() {
   const categories = Object.keys(DEFAULT_BUDGETS).concat(['薪資收入', '獎金收入', '其他收入']);
 
   let optionsHtml = '';
-  categories.forEach(cat => {
-    optionsHtml += `<option value="${cat}">${cat}</option>`;
-  });
+  categories.forEach(cat => optionsHtml += `<option value="${cat}">${cat}</option>`);
   txCategorySelect.innerHTML = optionsHtml;
 
   let filterOptionsHtml = '<option value="all">所有類別</option>';
-  categories.forEach(cat => {
-    filterOptionsHtml += `<option value="${cat}">${cat}</option>`;
-  });
+  categories.forEach(cat => filterOptionsHtml += `<option value="${cat}">${cat}</option>`);
   filterCategorySelect.innerHTML = filterOptionsHtml;
 }
 
-// --- Main Render Function ---
+// --- Tab Navigation Setup ---
+function setupTabNavigation() {
+  const desktopBtns = document.querySelectorAll('.desktop-tabs .tab-btn');
+  const mobileNavBtns = document.querySelectorAll('.mobile-nav .mobile-nav-btn');
+
+  function switchTab(targetTabId) {
+    activeTab = targetTabId;
+
+    // Toggle active state for desktop buttons
+    desktopBtns.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.tab === targetTabId);
+    });
+
+    // Toggle active state for mobile nav buttons
+    mobileNavBtns.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.tab === targetTabId);
+    });
+
+    // Show active tab content
+    document.querySelectorAll('.tab-content').forEach(content => {
+      content.classList.toggle('active', content.id === targetTabId);
+    });
+
+    // If charts tab activated, re-render charts so canvas dimensions update correctly
+    if (targetTabId === 'tab-charts') {
+      renderCharts();
+    }
+  }
+
+  desktopBtns.forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+  });
+
+  mobileNavBtns.forEach(btn => {
+    if (btn.dataset.tab) {
+      btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    }
+  });
+
+  // Mobile FAB button (+)
+  const mobileFab = document.getElementById('mobile-fab-add');
+  if (mobileFab) {
+    mobileFab.addEventListener('click', () => openManualModal());
+  }
+}
+
+// --- Main Render Controller ---
 function renderApp() {
   renderMetrics();
-  renderBudgetCards();
+  renderCategoryAnalysisTab();
   renderTransactionsTable();
-  renderCharts();
+  if (activeTab === 'tab-charts') {
+    renderCharts();
+  }
   saveDataToStorage();
 }
 
-// --- 1. Metrics & Overview ---
+// --- 1. Dashboard Metrics ---
 function renderMetrics() {
   let totalIncome = 0;
   let totalExpense = 0;
@@ -136,12 +177,10 @@ function renderMetrics() {
   const netBalance = totalIncome - totalExpense;
   const savingsRate = totalIncome > 0 ? Math.round((netBalance / totalIncome) * 100) : 0;
 
-  // Total Budget calculation
   let totalBudget = 0;
   Object.values(budgets).forEach(b => totalBudget += Number(b));
   const budgetUsagePercent = totalBudget > 0 ? Math.round((totalExpense / totalBudget) * 100) : 0;
 
-  // Update DOM
   document.getElementById('metric-total-income').textContent = `NT$ ${totalIncome.toLocaleString()}`;
   document.getElementById('metric-total-expense').textContent = `NT$ ${totalExpense.toLocaleString()}`;
   document.getElementById('metric-fixed-expense').textContent = `固定: $${fixedExpense.toLocaleString()}`;
@@ -149,10 +188,9 @@ function renderMetrics() {
 
   const balanceEl = document.getElementById('metric-net-balance');
   balanceEl.textContent = `NT$ ${netBalance.toLocaleString()}`;
-  balanceEl.style.color = netBalance >= 0 ? '#10b981' : '#ef4444';
+  balanceEl.style.color = netBalance >= 0 ? '#059669' : '#dc2626';
 
-  document.getElementById('metric-savings-rate').textContent = `儲蓄率 ${savingsRate}% (${netBalance >= 0 ? '正向累積' : '入不敷出'})`;
-
+  document.getElementById('metric-savings-rate').textContent = `儲蓄率 ${savingsRate}% (${netBalance >= 0 ? '正向累積' : '超支'})`;
   document.getElementById('metric-budget-percent').textContent = `${budgetUsagePercent}%`;
   document.getElementById('metric-budget-amount').textContent = `已花費 $${totalExpense.toLocaleString()} / 總預算 $${totalBudget.toLocaleString()}`;
 
@@ -168,7 +206,7 @@ function renderMetrics() {
   } else if (budgetUsagePercent >= 80) {
     progressBar.className = 'progress-bar-fill warning';
     statusBadge.className = 'badge badge-warning';
-    statusBadge.textContent = '⚠️ 接近預算上限 (80%+)';
+    statusBadge.textContent = '⚠️ 接近上限 (80%+)';
   } else {
     progressBar.className = 'progress-bar-fill';
     statusBadge.className = 'badge badge-success';
@@ -176,19 +214,51 @@ function renderMetrics() {
   }
 }
 
-// --- 2. Category Budget Cards & Alerts ---
-function renderBudgetCards() {
-  const container = document.getElementById('budget-cards-container');
-  let html = '';
+// --- 2. Tab 2: Monthly Category Expense Analysis ---
+function renderCategoryAnalysisTab() {
+  const summaryContainer = document.getElementById('category-summary-cards');
+  const cardsContainer = document.getElementById('budget-cards-container');
 
-  // Group expenses by category
+  // Compute category totals
   const categoryTotals = {};
+  let totalExpense = 0;
+
   transactions.forEach(tx => {
     if (tx.type === 'expense') {
-      categoryTotals[tx.category] = (categoryTotals[tx.category] || 0) + Number(tx.amount);
+      const amt = Number(tx.amount);
+      categoryTotals[tx.category] = (categoryTotals[tx.category] || 0) + amt;
+      totalExpense += amt;
     }
   });
 
+  // Top spending category
+  let topCategory = '無';
+  let topAmount = 0;
+  Object.keys(categoryTotals).forEach(cat => {
+    if (categoryTotals[cat] > topAmount) {
+      topAmount = categoryTotals[cat];
+      topCategory = cat;
+    }
+  });
+
+  // Render Top Analytics Row
+  summaryContainer.innerHTML = `
+    <div class="cat-stat-card">
+      <h4>本月最高花費類別</h4>
+      <h3>${topCategory} ($${topAmount.toLocaleString()})</h3>
+    </div>
+    <div class="cat-stat-card">
+      <h4>最高類別支出佔比</h4>
+      <h3>${totalExpense > 0 ? Math.round((topAmount / totalExpense) * 100) : 0}%</h3>
+    </div>
+    <div class="cat-stat-card">
+      <h4>總消費類別數</h4>
+      <h3>${Object.keys(categoryTotals).length} 個分類</h3>
+    </div>
+  `;
+
+  // Render Budget Progress Cards for each category
+  let html = '';
   Object.keys(DEFAULT_BUDGETS).forEach(cat => {
     const budget = budgets[cat] || DEFAULT_BUDGETS[cat];
     const spent = categoryTotals[cat] || 0;
@@ -219,7 +289,7 @@ function renderBudgetCards() {
         </div>
         <div class="budget-values">
           <span>已花費 <strong>$${spent.toLocaleString()}</strong></span>
-          <span>預算 <strong>$${budget.toLocaleString()}</strong></span>
+          <span>預算上限 <strong>$${budget.toLocaleString()}</strong></span>
         </div>
         <div class="progress-bar-bg">
           <div class="${barClass}" style="width: ${Math.min(percent, 100)}%;"></div>
@@ -228,10 +298,10 @@ function renderBudgetCards() {
     `;
   });
 
-  container.innerHTML = html;
+  cardsContainer.innerHTML = html;
 }
 
-// --- 3. Transactions Table Rendering & Filtering ---
+// --- 3. Transactions Table Rendering ---
 function renderTransactionsTable() {
   const tbody = document.getElementById('transactions-table-body');
   const countBadge = document.getElementById('transaction-count-badge');
@@ -239,40 +309,30 @@ function renderTransactionsTable() {
   const filterSearch = document.getElementById('filter-search').value.toLowerCase();
   const filterType = document.getElementById('filter-type').value;
   const filterCategory = document.getElementById('filter-category').value;
-  const filterPayment = document.getElementById('filter-payment').value;
 
   const filtered = transactions.filter(tx => {
-    // Search match
     const searchMatch = !filterSearch || 
       tx.description.toLowerCase().includes(filterSearch) || 
       tx.category.toLowerCase().includes(filterSearch);
 
-    // Type match
     let typeMatch = true;
     if (filterType === 'income') typeMatch = tx.type === 'income';
     else if (filterType === 'expense-fixed') typeMatch = tx.type === 'expense' && tx.nature && tx.nature.startsWith('fixed');
     else if (filterType === 'expense-variable') typeMatch = tx.type === 'expense' && (!tx.nature || tx.nature === 'variable');
 
-    // Category match
     const categoryMatch = filterCategory === 'all' || tx.category === filterCategory;
 
-    // Payment match
-    const paymentMatch = filterPayment === 'all' || tx.payment === filterPayment;
-
-    return searchMatch && typeMatch && categoryMatch && paymentMatch;
+    return searchMatch && typeMatch && categoryMatch;
   });
 
-  // Sort by date descending
   filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
-
   countBadge.textContent = `共 ${filtered.length} 筆紀錄`;
 
   if (filtered.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="8" style="text-align: center; color: #94a3b8; padding: 30px;">
-          <i class="fa-regular fa-folder-open" style="font-size: 2rem; margin-bottom: 8px; display: block;"></i>
-          尚無符合條件的交易紀錄
+        <td colspan="8" style="text-align: center; color: #7fa695; padding: 30px;">
+          尚無符合條件的交易明細
         </td>
       </tr>
     `;
@@ -283,7 +343,7 @@ function renderTransactionsTable() {
   filtered.forEach(tx => {
     const isIncome = tx.type === 'income';
     const amountStr = `${isIncome ? '+' : '-'} NT$ ${Number(tx.amount).toLocaleString()}`;
-    const amountColor = isIncome ? '#10b981' : '#f43f5e';
+    const amountColor = isIncome ? '#059669' : '#e11d48';
 
     let natureLabel = '收入';
     let natureTagClass = 'tag-income';
@@ -307,7 +367,7 @@ function renderTransactionsTable() {
         <td style="font-weight: 600;">${tx.category}</td>
         <td>${tx.description}</td>
         <td style="font-weight: 700; color: ${amountColor};">${amountStr}</td>
-        <td><span style="font-size: 0.85rem; color: #475569;">${tx.payment}</span></td>
+        <td><span style="font-size: 0.85rem; color: #335c4a;">${tx.payment}</span></td>
         <td>
           <button class="action-btn edit" onclick="editTransaction('${tx.id}')" title="編輯">
             <i class="fa-solid fa-pen"></i>
@@ -323,7 +383,7 @@ function renderTransactionsTable() {
   tbody.innerHTML = html;
 }
 
-// --- 4. Chart.js Data Visualization ---
+// --- 4. Chart.js Visualization ---
 function renderCharts() {
   renderDailyTrendChart();
   renderFixedVsVarChart();
@@ -331,9 +391,10 @@ function renderCharts() {
 }
 
 function renderDailyTrendChart() {
-  const ctx = document.getElementById('chart-daily-trend').getContext('2d');
+  const canvas = document.getElementById('chart-daily-trend');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
 
-  // Aggregate daily expenses for the current month
   const dailyMap = {};
   transactions.forEach(tx => {
     if (tx.type === 'expense') {
@@ -354,11 +415,11 @@ function renderDailyTrendChart() {
       datasets: [{
         label: '每日支出 (NT$)',
         data: data.length > 0 ? data : [0, 0, 0, 0, 0, 0, 0],
-        borderColor: '#6366f1',
-        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+        borderColor: '#059669',
+        backgroundColor: 'rgba(5, 150, 105, 0.12)',
         fill: true,
         tension: 0.3,
-        pointBackgroundColor: '#4f46e5',
+        pointBackgroundColor: '#047857',
         pointRadius: 4
       }]
     },
@@ -367,7 +428,7 @@ function renderDailyTrendChart() {
       maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
-        y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+        y: { beginAtZero: true, grid: { color: '#e6f4ed' } },
         x: { grid: { display: false } }
       }
     }
@@ -375,7 +436,9 @@ function renderDailyTrendChart() {
 }
 
 function renderFixedVsVarChart() {
-  const ctx = document.getElementById('chart-fixed-vs-var').getContext('2d');
+  const canvas = document.getElementById('chart-fixed-vs-var');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
 
   let fixedTotal = 0;
   let varTotal = 0;
@@ -399,7 +462,7 @@ function renderFixedVsVarChart() {
       datasets: [{
         label: '金額 (NT$)',
         data: [fixedTotal, varTotal],
-        backgroundColor: ['#0284c7', '#f43f5e'],
+        backgroundColor: ['#0284c7', '#10b981'],
         borderRadius: 8
       }]
     },
@@ -408,7 +471,7 @@ function renderFixedVsVarChart() {
       maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
-        y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+        y: { beginAtZero: true, grid: { color: '#e6f4ed' } },
         x: { grid: { display: false } }
       }
     }
@@ -416,7 +479,9 @@ function renderFixedVsVarChart() {
 }
 
 function renderCategoryPieChart() {
-  const ctx = document.getElementById('chart-category-pie').getContext('2d');
+  const canvas = document.getElementById('chart-category-pie');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
 
   const catMap = {};
   transactions.forEach(tx => {
@@ -427,7 +492,7 @@ function renderCategoryPieChart() {
 
   const labels = Object.keys(catMap);
   const data = Object.values(catMap);
-  const colors = ['#f43f5e', '#6366f1', '#0ea5e9', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#64748b'];
+  const colors = ['#059669', '#10b981', '#0ea5e9', '#f59e0b', '#8b5cf6', '#ec4899', '#3b82f6', '#64748b'];
 
   if (categoryPieChart) categoryPieChart.destroy();
 
@@ -437,7 +502,7 @@ function renderCategoryPieChart() {
       labels: labels.length > 0 ? labels : ['無資料'],
       datasets: [{
         data: data.length > 0 ? data : [1],
-        backgroundColor: labels.length > 0 ? colors.slice(0, labels.length) : ['#cbd5e1'],
+        backgroundColor: labels.length > 0 ? colors.slice(0, labels.length) : ['#d1fae5'],
         borderWidth: 2,
         borderColor: '#ffffff'
       }]
@@ -466,11 +531,10 @@ function handleAiParse() {
   const parsedItems = parseNaturalLanguageText(text);
 
   if (parsedItems.length === 0) {
-    alert('無法解析金額與項目，請試試看包含品項與數字的輸入，如「午餐 150，搭計程車 220」');
+    alert('無法解析金額與項目，請試試看如「午餐 150，搭計程車 220」');
     return;
   }
 
-  // Add parsed items into transactions
   const today = new Date().toISOString().split('T')[0];
 
   parsedItems.forEach(item => {
@@ -488,11 +552,10 @@ function handleAiParse() {
 
   inputEl.value = '';
   renderApp();
-  alert(`✨ 成功自動拆解並匯入 ${parsedItems.length} 筆帳目！`);
+  alert(`✨ 成功自動解析並匯入 ${parsedItems.length} 筆帳目！`);
 }
 
 function parseNaturalLanguageText(text) {
-  // Split by common delimiters (commas, semicolons, newlines, pauses)
   const segments = text.split(/[,;，；\n、]+/);
   const results = [];
 
@@ -500,7 +563,6 @@ function parseNaturalLanguageText(text) {
     seg = seg.trim();
     if (!seg) return;
 
-    // Find amount regex
     const amtMatch = seg.match(/(\d+)/);
     if (!amtMatch) return;
 
@@ -510,21 +572,17 @@ function parseNaturalLanguageText(text) {
     let category = '其他支出';
     let payment = '現金';
 
-    // Description clean up
     let description = seg.replace(/\d+/g, '').replace(/(元|塊|塊錢|NT\$)/gi, '').trim();
 
-    // Check payment keyword
     if (/刷卡|信用卡/i.test(seg)) payment = '信用卡';
     else if (/line\s*pay|linepay/i.test(seg)) payment = 'LINE Pay';
     else if (/轉帳|匯款|銀行/i.test(seg)) payment = '銀行轉帳';
 
-    // Check Income
     if (/薪資|薪水|收入|獎金|兼職|副業/i.test(seg)) {
       type = 'income';
       nature = 'income';
       category = '薪資收入';
     } else {
-      // Check Fixed vs Variable
       if (/訂閱|netflix|spotify|apple|電信|保險|水電|房租/i.test(seg)) {
         nature = 'fixed-monthly';
         if (/netflix|spotify|apple|影音|訂閱/i.test(seg)) category = '影音訂閱';
@@ -532,7 +590,6 @@ function parseNaturalLanguageText(text) {
         else if (/電信/i.test(seg)) category = '電信費';
         else if (/保險/i.test(seg)) { category = '保險費'; nature = 'fixed-yearly'; }
       } else {
-        // Variable categories
         if (/餐|午餐|晚餐|早餐|便當|飯|麵|咖啡|飲料|聚餐/i.test(seg)) category = '餐飲';
         else if (/計程車|uber|捷運|公車|高鐵|加油|停車/i.test(seg)) category = '交通';
         else if (/全聯|採買|日用品|衛生紙|超市/i.test(seg)) category = '日常用品';
@@ -556,21 +613,6 @@ function setupInvoiceScanner() {
 
   dropZone.addEventListener('click', () => fileInput.click());
 
-  dropZone.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    dropZone.classList.add('dragover');
-  });
-
-  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-
-  dropZone.addEventListener('drop', (e) => {
-    e.preventDefault();
-    dropZone.classList.remove('dragover');
-    if (e.dataTransfer.files.length > 0) {
-      processInvoiceFile(e.dataTransfer.files[0]);
-    }
-  });
-
   fileInput.addEventListener('change', (e) => {
     if (e.target.files.length > 0) {
       processInvoiceFile(e.target.files[0]);
@@ -582,7 +624,7 @@ function setupInvoiceScanner() {
       transactions.push(currentScannedData);
       renderApp();
       closeModals();
-      alert('✅ 發票辨識資料已成功匯入記帳列表！');
+      alert('✅ 發票辨識資料已成功帶入！');
     }
   });
 }
@@ -599,20 +641,15 @@ function processInvoiceFile(file) {
   ocrBox.style.display = 'none';
   btnConfirm.style.display = 'none';
 
-  // Read preview image
   const reader = new FileReader();
-  reader.onload = (e) => {
-    previewImg.src = e.target.result;
-  };
+  reader.onload = (e) => previewImg.src = e.target.result;
   reader.readAsDataURL(file);
 
-  // Simulate AI Scanner process
   setTimeout(() => {
     scanContainer.style.display = 'none';
     ocrBox.style.display = 'block';
     btnConfirm.style.display = 'inline-flex';
 
-    // Mock OCR result based on file name or timestamp
     const today = new Date().toISOString().split('T')[0];
     const isSeven = Math.random() > 0.5;
 
@@ -636,7 +673,7 @@ function processInvoiceFile(file) {
       payment: mockPayment,
       description: `${mockMerchant} 發票電子載具`
     };
-  }, 1800);
+  }, 1600);
 }
 
 // --- 7. CSV Export & Import ---
@@ -646,7 +683,7 @@ function exportCSV() {
     return;
   }
 
-  let csvContent = '\uFEFF'; // UTF-8 BOM for Excel compatibility
+  let csvContent = '\uFEFF';
   csvContent += '日期,收支類型,支出屬性,分類項目,描述,金額,支付管道\n';
 
   transactions.forEach(tx => {
@@ -666,7 +703,7 @@ function exportCSV() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.setAttribute('href', url);
-  link.setAttribute('download', `SmartExpense_Backup_${new Date().toISOString().split('T')[0]}.csv`);
+  link.setAttribute('download', `GreenExpense_Backup_${new Date().toISOString().split('T')[0]}.csv`);
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -707,8 +744,6 @@ function importCSV(file) {
       transactions = newTxList;
       renderApp();
       alert(`✅ 成功匯入 ${newTxList.length} 筆帳目紀錄！`);
-    } else {
-      alert('無法解析此 CSV 檔案格式！');
     }
   };
   reader.readAsText(file);
@@ -716,7 +751,6 @@ function importCSV(file) {
 
 // --- 8. Event Listeners & Modals ---
 function setupEventListeners() {
-  // AI Parse button & Chips
   document.getElementById('btn-ai-parse').addEventListener('click', handleAiParse);
   document.querySelectorAll('.chip').forEach(chip => {
     chip.addEventListener('click', () => {
@@ -725,49 +759,40 @@ function setupEventListeners() {
     });
   });
 
-  // Filters
   document.getElementById('filter-search').addEventListener('input', renderTransactionsTable);
   document.getElementById('filter-type').addEventListener('change', renderTransactionsTable);
   document.getElementById('filter-category').addEventListener('change', renderTransactionsTable);
-  document.getElementById('filter-payment').addEventListener('change', renderTransactionsTable);
 
-  // CSV
   document.getElementById('btn-export-csv').addEventListener('click', exportCSV);
   document.getElementById('input-import-csv').addEventListener('change', (e) => {
     if (e.target.files.length > 0) importCSV(e.target.files[0]);
   });
 
-  // Modal Triggers
-  document.getElementById('btn-add-manual').addEventListener('click', () => {
-    openManualModal();
-  });
-
+  document.getElementById('btn-add-manual').addEventListener('click', () => openManualModal());
   document.getElementById('btn-scan-invoice').addEventListener('click', () => {
     openModal('modal-scanner');
     resetScannerModal();
   });
 
-  document.getElementById('btn-edit-budgets').addEventListener('click', () => {
-    openBudgetsModal();
+  document.getElementById('btn-edit-budgets-tab2').addEventListener('click', () => {
+    document.querySelector('.tab-btn[data-tab="tab-settings"]').click();
   });
 
-  // Close modals
   document.querySelectorAll('.btn-close-modal').forEach(btn => {
     btn.addEventListener('click', closeModals);
   });
 
-  // Manual Form submit
   document.getElementById('form-transaction').addEventListener('submit', (e) => {
     e.preventDefault();
     saveManualTransaction();
   });
 
-  // Budgets Form submit
-  document.getElementById('form-budgets').addEventListener('submit', (e) => {
+  document.getElementById('form-settings-budgets').addEventListener('submit', (e) => {
     e.preventDefault();
-    saveBudgets();
+    saveBudgetsFromSettings();
   });
 
+  renderSettingsBudgetInputs();
   setupInvoiceScanner();
 }
 
@@ -796,11 +821,9 @@ function openManualModal(editId = null) {
       document.getElementById('tx-date').value = tx.date;
       document.getElementById('tx-payment').value = tx.payment;
       document.getElementById('tx-description').value = tx.description;
-      document.getElementById('modal-title').innerHTML = '<i class="fa-solid fa-pen"></i> 編輯帳目紀錄';
     }
   } else {
     document.getElementById('tx-id').value = '';
-    document.getElementById('modal-title').innerHTML = '<i class="fa-solid fa-plus"></i> 新增帳目紀錄';
   }
 
   openModal('modal-transaction');
@@ -843,33 +866,31 @@ function editTransaction(id) {
   openManualModal(id);
 }
 
-function openBudgetsModal() {
-  const container = document.getElementById('budget-inputs-list');
+function renderSettingsBudgetInputs() {
+  const container = document.getElementById('settings-budget-list');
   let html = '';
 
   Object.keys(DEFAULT_BUDGETS).forEach(cat => {
     const budget = budgets[cat] || DEFAULT_BUDGETS[cat];
     html += `
       <div class="form-group">
-        <label for="budget-${cat}">${cat} 月度預算 (NT$)</label>
-        <input type="number" id="budget-${cat}" data-category="${cat}" value="${budget}" min="0" step="500">
+        <label for="setting-budget-${cat}">${cat} 月度預算 (NT$)</label>
+        <input type="number" id="setting-budget-${cat}" data-category="${cat}" value="${budget}" min="0" step="500">
       </div>
     `;
   });
 
   container.innerHTML = html;
-  openModal('modal-budgets');
 }
 
-function saveBudgets() {
-  document.querySelectorAll('#budget-inputs-list input').forEach(input => {
+function saveBudgetsFromSettings() {
+  document.querySelectorAll('#settings-budget-list input').forEach(input => {
     const cat = input.dataset.category;
     budgets[cat] = Number(input.value) || 0;
   });
 
   renderApp();
-  closeModals();
-  alert('✅ 各類別預算額度已儲存！');
+  alert('✅ 預算設定已順利儲存！');
 }
 
 function resetScannerModal() {

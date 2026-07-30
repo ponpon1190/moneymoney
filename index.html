@@ -2,267 +2,339 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>極簡明亮 - 個人現代化 Web 記帳系統</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>清新草綠 - 個人智慧記帳</title>
   
-  <!-- Google Fonts: Outfit & Inter -->
+  <!-- Google Fonts: Outfit & Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Chart.js for Responsive Data Visualization -->
+  <!-- Chart.js for Data Visualization -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- App Container -->
+  <!-- Main Layout -->
   <div class="app-container">
     
-    <!-- Top Navigation Header -->
+    <!-- Top Header -->
     <header class="app-header">
       <div class="header-brand">
         <div class="brand-icon">
-          <i class="fa-solid fa-wallet"></i>
+          <i class="fa-solid fa-leaf"></i>
         </div>
         <div>
-          <h1>Smart Expense <span>智慧記帳</span></h1>
-          <p class="brand-subtitle">固定與變動支出管理 ‧ 智能自然語言 ‧ 80% 預算超標告警</p>
+          <h1>草綠記帳 <span>GreenExpense</span></h1>
+          <p class="brand-subtitle">清新直覺 ‧ 固定與變動支出分析 ‧ 預算80%告警</p>
         </div>
       </div>
       
       <div class="header-actions">
         <button id="btn-scan-invoice" class="btn btn-secondary">
-          <i class="fa-solid fa-receipt"></i> 上傳發票辨識
+          <i class="fa-solid fa-camera"></i> 發票辨識
         </button>
         <button id="btn-add-manual" class="btn btn-primary">
           <i class="fa-solid fa-plus"></i> 新增帳目
         </button>
-        <button id="btn-export-csv" class="btn btn-outline" title="匯出 CSV 檔">
-          <i class="fa-solid fa-file-export"></i> 匯出 CSV
-        </button>
-        <label for="input-import-csv" class="btn btn-outline" title="匯入 CSV 檔" style="cursor: pointer;">
-          <i class="fa-solid fa-file-import"></i> 匯入 CSV
-        </label>
-        <input type="file" id="input-import-csv" accept=".csv" style="display: none;">
       </div>
     </header>
 
-    <!-- Natural Language Quick Entry Panel -->
-    <section class="ai-input-section">
-      <div class="ai-input-card">
-        <div class="ai-input-header">
-          <div class="ai-badge">
-            <i class="fa-solid fa-wand-magic-sparkles"></i> AI 智能快捷記帳
-          </div>
-          <span class="ai-tip">輸入範例文字或點選快捷標籤，系統將自動解析分類！</span>
-        </div>
-        
-        <div class="ai-input-box">
-          <input type="text" id="ai-text-input" placeholder="例如：今天午餐 150，搭計程車 220，訂閱 Netflix 390，薪資 55000">
-          <button id="btn-ai-parse" class="btn btn-ai">
-            <i class="fa-solid fa-bolt"></i> 智能解析並匯入
-          </button>
-        </div>
-        
-        <div class="quick-chips">
-          <span class="chip-label">快捷試用：</span>
-          <button class="chip" data-text="今天午餐 150，搭計程車 220，訂閱 Netflix 390">
-            <i class="fa-solid fa-utensils"></i> 餐飲+交通+訂閱
-          </button>
-          <button class="chip" data-text="水電費 1850 轉帳，全聯日用品 650 LINE Pay">
-            <i class="fa-solid fa-bolt"></i> 水電+日用品
-          </button>
-          <button class="chip" data-text="薪資 55000，保險費 12000 信用卡">
-            <i class="fa-solid fa-sack-dollar"></i> 薪資+保險年繳
-          </button>
-        </div>
-      </div>
-    </section>
+    <!-- Desktop Navigation Tabs Menu -->
+    <nav class="desktop-tabs">
+      <button class="tab-btn active" data-tab="tab-dashboard">
+        <i class="fa-solid fa-pen-to-square"></i> 首頁記帳
+      </button>
+      <button class="tab-btn" data-tab="tab-category-analysis">
+        <i class="fa-solid fa-chart-pie"></i> 分類分析
+      </button>
+      <button class="tab-btn" data-tab="tab-charts">
+        <i class="fa-solid fa-chart-column"></i> 統計圖表
+      </button>
+      <button class="tab-btn" data-tab="tab-settings">
+        <i class="fa-solid fa-sliders"></i> 設定與備份
+      </button>
+    </nav>
 
-    <!-- Overview Metrics Row -->
-    <section class="metrics-grid">
-      <!-- Income Card -->
-      <div class="metric-card metric-income">
-        <div class="metric-icon">
-          <i class="fa-solid fa-arrow-trend-up"></i>
-        </div>
-        <div class="metric-info">
-          <span class="metric-title">本月總收入</span>
-          <h2 id="metric-total-income">NT$ 0</h2>
-          <span class="metric-sub">薪資、獎金與副業</span>
-        </div>
-      </div>
-
-      <!-- Expense Card -->
-      <div class="metric-card metric-expense">
-        <div class="metric-icon">
-          <i class="fa-solid fa-arrow-trend-down"></i>
-        </div>
-        <div class="metric-info">
-          <span class="metric-title">本月總支出</span>
-          <h2 id="metric-total-expense">NT$ 0</h2>
-          <div class="expense-breakdown">
-            <span id="metric-fixed-expense">固定: $0</span>
-            <span class="divider">|</span>
-            <span id="metric-var-expense">變動: $0</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Net Balance Card -->
-      <div class="metric-card metric-balance">
-        <div class="metric-icon">
-          <i class="fa-solid fa-piggy-bank"></i>
-        </div>
-        <div class="metric-info">
-          <span class="metric-title">本月淨結餘</span>
-          <h2 id="metric-net-balance">NT$ 0</h2>
-          <span class="metric-sub" id="metric-savings-rate">儲蓄率 0%</span>
-        </div>
-      </div>
-
-      <!-- Total Budget Card -->
-      <div class="metric-card metric-budget">
-        <div class="metric-icon">
-          <i class="fa-solid fa-chart-pie"></i>
-        </div>
-        <div class="metric-info">
-          <div class="metric-header-row">
-            <span class="metric-title">總預算使用率</span>
-            <span id="budget-status-badge" class="badge badge-success">✅ 正常</span>
-          </div>
-          <h2 id="metric-budget-percent">0%</h2>
-          <div class="progress-bar-bg">
-            <div id="metric-budget-bar" class="progress-bar-fill" style="width: 0%;"></div>
-          </div>
-          <span class="metric-sub" id="metric-budget-amount">已花費 $0 / 總預算 $30,000</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Budget Monitor & Alerts Section -->
-    <section class="section-card budget-section">
-      <div class="section-header">
-        <div>
-          <h2><i class="fa-solid fa-shield-halved"></i> 分類預算告警卡片</h2>
-          <p>每類別超過 80% 觸發黃色警示，超過 100% 觸發紅色超標告警</p>
-        </div>
-        <button id="btn-edit-budgets" class="btn btn-sm btn-outline">
-          <i class="fa-solid fa-gear"></i> 設定預算額度
-        </button>
-      </div>
+    <!-- ===================================================================
+         TAB 1: 首頁記帳 (Dashboard & Rapid Entry)
+         =================================================================== -->
+    <main id="tab-dashboard" class="tab-content active">
       
-      <div id="budget-cards-container" class="budget-cards-grid">
-        <!-- Budget cards rendered via JavaScript -->
-      </div>
-    </section>
+      <!-- Metrics Summary Cards -->
+      <section class="metrics-grid">
+        <!-- Income Card -->
+        <div class="metric-card metric-income">
+          <div class="metric-icon"><i class="fa-solid fa-arrow-up"></i></div>
+          <div class="metric-info">
+            <span class="metric-title">本月總收入</span>
+            <h2 id="metric-total-income">NT$ 0</h2>
+            <span class="metric-sub">薪資、獎金與副業</span>
+          </div>
+        </div>
 
-    <!-- Visual Charts Dashboard Grid -->
-    <section class="charts-grid">
-      <!-- Daily Trend Line Chart -->
-      <div class="section-card chart-card">
-        <div class="chart-header">
-          <h3><i class="fa-solid fa-chart-line"></i> 每日花費趨勢</h3>
-          <span class="chart-subtitle">本月每日變動與固定支出變化</span>
+        <!-- Expense Card -->
+        <div class="metric-card metric-expense">
+          <div class="metric-icon"><i class="fa-solid fa-arrow-down"></i></div>
+          <div class="metric-info">
+            <span class="metric-title">本月總支出</span>
+            <h2 id="metric-total-expense">NT$ 0</h2>
+            <div class="expense-breakdown">
+              <span id="metric-fixed-expense">固定: $0</span>
+              <span class="divider">|</span>
+              <span id="metric-var-expense">變動: $0</span>
+            </div>
+          </div>
         </div>
-        <div class="chart-wrapper">
-          <canvas id="chart-daily-trend"></canvas>
-        </div>
-      </div>
 
-      <!-- Fixed vs Variable Comparison Bar Chart -->
-      <div class="section-card chart-card">
-        <div class="chart-header">
-          <h3><i class="fa-solid fa-chart-column"></i> 固定支出 vs 變動支出</h3>
-          <span class="chart-subtitle">常態固定開銷與日常變動花費對比</span>
+        <!-- Net Balance Card -->
+        <div class="metric-card metric-balance">
+          <div class="metric-icon"><i class="fa-solid fa-wallet"></i></div>
+          <div class="metric-info">
+            <span class="metric-title">本月淨結餘</span>
+            <h2 id="metric-net-balance">NT$ 0</h2>
+            <span class="metric-sub" id="metric-savings-rate">儲蓄率 0%</span>
+          </div>
         </div>
-        <div class="chart-wrapper">
-          <canvas id="chart-fixed-vs-var"></canvas>
-        </div>
-      </div>
 
-      <!-- Category Donut Chart -->
-      <div class="section-card chart-card">
-        <div class="chart-header">
-          <h3><i class="fa-solid fa-chart-pie"></i> 支出類別分布比例</h3>
-          <span class="chart-subtitle">各類別消費占比分析</span>
+        <!-- Budget Utilization Card -->
+        <div class="metric-card metric-budget">
+          <div class="metric-icon"><i class="fa-solid fa-shield-heart"></i></div>
+          <div class="metric-info">
+            <div class="metric-header-row">
+              <span class="metric-title">預算進度</span>
+              <span id="budget-status-badge" class="badge badge-success">✅ 正常</span>
+            </div>
+            <h2 id="metric-budget-percent">0%</h2>
+            <div class="progress-bar-bg">
+              <div id="metric-budget-bar" class="progress-bar-fill" style="width: 0%;"></div>
+            </div>
+            <span class="metric-sub" id="metric-budget-amount">已花費 $0 / 總預算 $0</span>
+          </div>
         </div>
-        <div class="chart-wrapper">
-          <canvas id="chart-category-pie"></canvas>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Transactions List & Filter Section -->
-    <section class="section-card transactions-section">
-      <div class="transactions-header">
-        <div class="header-left">
-          <h2><i class="fa-solid fa-list-check"></i> 收支交易明細紀錄</h2>
-          <span id="transaction-count-badge" class="count-badge">共 0 筆紀錄</span>
-        </div>
-        
-        <!-- Filters Toolbar -->
-        <div class="filter-toolbar">
-          <div class="search-box">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="filter-search" placeholder="搜尋項目、商家描述...">
+      <!-- AI Natural Language Rapid Entry -->
+      <section class="ai-input-section">
+        <div class="ai-input-card">
+          <div class="ai-input-header">
+            <div class="ai-badge">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> 快捷語意記帳
+            </div>
+            <span class="ai-tip">對話式輸入，自動拆解並分類帶入！</span>
           </div>
           
-          <select id="filter-type">
-            <option value="all">所有類型 (全區)</option>
-            <option value="income">僅收入</option>
-            <option value="expense-fixed">僅固定支出</option>
-            <option value="expense-variable">僅變動支出</option>
-          </select>
+          <div class="ai-input-box">
+            <input type="text" id="ai-text-input" placeholder="例如：今天午餐 150，搭計程車 220，訂閱 Netflix 390">
+            <button id="btn-ai-parse" class="btn btn-ai">
+              <i class="fa-solid fa-bolt"></i> 解析匯入
+            </button>
+          </div>
+          
+          <div class="quick-chips">
+            <span class="chip-label">一鍵試用：</span>
+            <button class="chip" data-text="今天午餐 150，搭計程車 220，訂閱 Netflix 390">
+              🍱 午餐+計程車+Netflix
+            </button>
+            <button class="chip" data-text="水電費 1850 轉帳，全聯日用品 650 LINE Pay">
+              ⚡ 水電+全聯採買
+            </button>
+            <button class="chip" data-text="薪資 55000，保險費 12000 信用卡">
+              💰 薪資+保險年繳
+            </button>
+          </div>
+        </div>
+      </section>
 
-          <select id="filter-category">
-            <option value="all">所有類別</option>
-            <!-- Dynamically populated -->
-          </select>
+      <!-- Transactions List -->
+      <section class="section-card">
+        <div class="transactions-header">
+          <div class="header-left">
+            <h2><i class="fa-solid fa-list"></i> 近期收支明細</h2>
+            <span id="transaction-count-badge" class="count-badge">共 0 筆紀錄</span>
+          </div>
+          
+          <!-- Filter Bar -->
+          <div class="filter-toolbar">
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="filter-search" placeholder="搜尋項目描述...">
+            </div>
+            
+            <select id="filter-type">
+              <option value="all">所有收支類型</option>
+              <option value="income">僅收入</option>
+              <option value="expense-fixed">僅固定支出</option>
+              <option value="expense-variable">僅變動支出</option>
+            </select>
 
-          <select id="filter-payment">
-            <option value="all">所有支付方式</option>
-            <option value="現金">💵 現金</option>
-            <option value="信用卡">💳 信用卡</option>
-            <option value="LINE Pay">📱 LINE Pay</option>
-            <option value="銀行轉帳">🏦 銀行轉帳</option>
-          </select>
+            <select id="filter-category">
+              <option value="all">所有類別</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>日期</th>
+                <th>類型</th>
+                <th>屬性</th>
+                <th>分類</th>
+                <th>描述 / 商家</th>
+                <th>金額 (NT$)</th>
+                <th>支付管道</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="transactions-table-body">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <!-- ===================================================================
+         TAB 2: 分類分析 (Monthly Category Expense Analysis)
+         =================================================================== -->
+    <main id="tab-category-analysis" class="tab-content">
+      <section class="section-card">
+        <div class="section-header">
+          <div>
+            <h2><i class="fa-solid fa-chart-pie"></i> 每月類別支出與預算監控</h2>
+            <p>即時追蹤各類別消費佔比與預算使用率（80% 黃色預警 / 100% 紅色超額）</p>
+          </div>
+          <button id="btn-edit-budgets-tab2" class="btn btn-sm btn-outline">
+            <i class="fa-solid fa-gear"></i> 設定預算額度
+          </button>
+        </div>
+
+        <!-- Monthly Analysis Summary Row -->
+        <div id="category-summary-cards" class="cat-analysis-grid">
+          <!-- Rendered by JS -->
+        </div>
+
+        <!-- Budget Progress Cards -->
+        <div id="budget-cards-container" class="budget-cards-grid">
+          <!-- Rendered by JS -->
+        </div>
+      </section>
+    </main>
+
+    <!-- ===================================================================
+         TAB 3: 統計圖表 (Visual Analytics & Charts)
+         =================================================================== -->
+    <main id="tab-charts" class="tab-content">
+      <div class="charts-grid">
+        <!-- Daily Trend Line Chart -->
+        <div class="section-card chart-card">
+          <div class="chart-header">
+            <h3><i class="fa-solid fa-chart-line"></i> 每日花費趨勢圖</h3>
+            <span class="chart-subtitle">本月每日變動與固定支出變化軌跡</span>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="chart-daily-trend"></canvas>
+          </div>
+        </div>
+
+        <!-- Fixed vs Variable Comparison Bar Chart -->
+        <div class="section-card chart-card">
+          <div class="chart-header">
+            <h3><i class="fa-solid fa-chart-column"></i> 固定支出 vs 變動支出</h3>
+            <span class="chart-subtitle">常態固定開銷與日常變動花費比例</span>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="chart-fixed-vs-var"></canvas>
+          </div>
+        </div>
+
+        <!-- Category Donut Chart -->
+        <div class="section-card chart-card">
+          <div class="chart-header">
+            <h3><i class="fa-solid fa-chart-pie"></i> 各支出類別佔比分析</h3>
+            <span class="chart-subtitle">月度花費結構分布占比</span>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="chart-category-pie"></canvas>
+          </div>
         </div>
       </div>
+    </main>
 
-      <!-- Transactions Table -->
-      <div class="table-container">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>日期</th>
-              <th>類型</th>
-              <th>收支屬性</th>
-              <th>分類項目</th>
-              <th>項目描述 / 商家</th>
-              <th>金額 (NT$)</th>
-              <th>支付管道</th>
-              <th>操作</th>
-            </tr>
-          </thead>
-          <tbody id="transactions-table-body">
-            <!-- Rendered by JavaScript -->
-          </tbody>
-        </table>
+    <!-- ===================================================================
+         TAB 4: 設定與備份 (Settings & CSV Backup)
+         =================================================================== -->
+    <main id="tab-settings" class="tab-content">
+      <div class="settings-grid">
+        <section class="section-card">
+          <div class="section-header">
+            <h2><i class="fa-solid fa-file-csv"></i> CSV 資料備份與還原</h2>
+            <p>您可以將記帳資料隨時匯出備份，或從 CSV 檔案恢復歷史帳目</p>
+          </div>
+          <div class="settings-action-row">
+            <button id="btn-export-csv" class="btn btn-primary">
+              <i class="fa-solid fa-file-export"></i> 匯出 CSV 備份檔
+            </button>
+            <label for="input-import-csv" class="btn btn-outline" style="cursor: pointer;">
+              <i class="fa-solid fa-file-import"></i> 匯入 CSV 恢復資料
+            </label>
+            <input type="file" id="input-import-csv" accept=".csv" style="display: none;">
+          </div>
+        </section>
+
+        <section class="section-card">
+          <div class="section-header">
+            <h2><i class="fa-solid fa-sliders"></i> 各類別預算額度設定</h2>
+            <p>自訂每月各項花費上限金額</p>
+          </div>
+          <form id="form-settings-budgets">
+            <div id="settings-budget-list" class="budget-inputs-list">
+              <!-- Dynamically populated -->
+            </div>
+            <div style="margin-top: 16px;">
+              <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> 儲存預算設定</button>
+            </div>
+          </form>
+        </section>
       </div>
-    </section>
+    </main>
 
     <!-- Footer -->
     <footer class="app-footer">
-      <p>© 2026 Smart Expense Tracker ‧ 現代化個人財務管理工具 ‧ 資料安全儲存於本地端</p>
+      <p>© 2026 草綠記帳 GreenExpense ‧ 清新草綠個人財務助手</p>
     </footer>
   </div>
 
-  <!-- Modal 1: Add/Edit Manual Transaction -->
+  <!-- Mobile Bottom Navigation Bar (手機版底部導覽列) -->
+  <nav class="mobile-nav">
+    <button class="mobile-nav-btn active" data-tab="tab-dashboard">
+      <i class="fa-solid fa-house"></i>
+      <span>首頁記帳</span>
+    </button>
+    <button class="mobile-nav-btn" data-tab="tab-category-analysis">
+      <i class="fa-solid fa-chart-pie"></i>
+      <span>分類分析</span>
+    </button>
+    <button id="mobile-fab-add" class="mobile-fab" title="新增記帳">
+      <i class="fa-solid fa-plus"></i>
+    </button>
+    <button class="mobile-nav-btn" data-tab="tab-charts">
+      <i class="fa-solid fa-chart-column"></i>
+      <span>統計圖表</span>
+    </button>
+    <button class="mobile-nav-btn" data-tab="tab-settings">
+      <i class="fa-solid fa-gear"></i>
+      <span>設定備份</span>
+    </button>
+  </nav>
+
+  <!-- Modal 1: Add/Edit Transaction -->
   <div id="modal-transaction" class="modal">
     <div class="modal-content">
       <div class="modal-header">
@@ -295,9 +367,7 @@
         <div class="form-row">
           <div class="form-group">
             <label for="tx-category">分類項目</label>
-            <select id="tx-category" required>
-              <!-- Populated dynamically -->
-            </select>
+            <select id="tx-category" required></select>
           </div>
 
           <div class="form-group">
@@ -315,28 +385,28 @@
           <div class="form-group">
             <label for="tx-payment">支付管道</label>
             <select id="tx-payment" required>
-              <option value="現金">💵 現金 (Cash)</option>
-              <option value="信用卡">💳 信用卡 (Credit Card)</option>
+              <option value="現金">💵 現金</option>
+              <option value="信用卡">💳 信用卡</option>
               <option value="LINE Pay">📱 LINE Pay</option>
-              <option value="銀行轉帳">🏦 銀行轉帳 (Bank Transfer)</option>
+              <option value="銀行轉帳">🏦 銀行轉帳</option>
             </select>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="tx-description">項目描述 / 商家名稱</label>
-          <input type="text" id="tx-description" placeholder="例如：全聯採買、午餐便當、Netflix" required>
+          <label for="tx-description">項目描述 / 商家</label>
+          <input type="text" id="tx-description" placeholder="例如：全聯採買、午餐便當" required>
         </div>
 
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary btn-close-modal">取消</button>
-          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> 儲存紀錄</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> 儲存</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Modal 2: Invoice Scanner Simulation -->
+  <!-- Modal 2: Invoice Scanner -->
   <div id="modal-scanner" class="modal">
     <div class="modal-content modal-scanner-content">
       <div class="modal-header">
@@ -345,13 +415,12 @@
       </div>
       <div class="modal-body">
         <div id="drop-zone" class="drop-zone">
-          <i class="fa-solid fa-cloud-arrow-up drop-icon"></i>
-          <h4>拖放發票圖檔至此處，或點擊選擇檔案</h4>
-          <p>支援 JPG, PNG, WEBP 發票或收據截圖</p>
+          <i class="fa-solid fa-camera drop-icon"></i>
+          <h4>點擊選擇照片或拖放發票圖檔</h4>
+          <p>支援發票照片或載具截圖</p>
           <input type="file" id="file-invoice" accept="image/*" style="display: none;">
         </div>
 
-        <!-- Scanning animation preview -->
         <div id="scan-preview-container" class="scan-preview-container" style="display: none;">
           <div class="scanner-screen">
             <img id="scanned-image-preview" src="" alt="發票預覽">
@@ -359,56 +428,28 @@
           </div>
           <div class="scan-status">
             <i class="fa-solid fa-circle-notch fa-spin"></i>
-            <span id="scan-status-text">AI 正在辨識發票開立商家、日期與明細金額...</span>
+            <span id="scan-status-text">AI 正在辨識發票商家與金額...</span>
           </div>
         </div>
 
-        <!-- OCR Result Preview Form -->
         <div id="ocr-result-box" class="ocr-result-box" style="display: none;">
           <div class="result-header">
-            <h4><i class="fa-solid fa-circle-check" style="color: #10b981;"></i> 辨識成功！請確認帶入資料</h4>
+            <h4><i class="fa-solid fa-circle-check" style="color: #059669;"></i> 辨識成功！</h4>
           </div>
           <div class="ocr-fields">
-            <div class="ocr-field">
-              <span>商家名稱：</span><strong id="ocr-merchant">7-ELEVEN 統一超商</strong>
-            </div>
-            <div class="ocr-field">
-              <span>日期：</span><strong id="ocr-date">2026-07-30</strong>
-            </div>
-            <div class="ocr-field">
-              <span>發票總額：</span><strong id="ocr-amount">NT$ 165</strong>
-            </div>
-            <div class="ocr-field">
-              <span>自動分類：</span><strong id="ocr-category">餐飲 (變動支出)</strong>
-            </div>
+            <div class="ocr-field"><span>商家：</span><strong id="ocr-merchant">7-ELEVEN 統一超商</strong></div>
+            <div class="ocr-field"><span>日期：</span><strong id="ocr-date">2026-07-30</strong></div>
+            <div class="ocr-field"><span>總額：</span><strong id="ocr-amount">NT$ 165</strong></div>
+            <div class="ocr-field"><span>分類：</span><strong id="ocr-category">餐飲 (變動支出)</strong></div>
           </div>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary btn-close-modal">取消</button>
         <button type="button" id="btn-confirm-ocr" class="btn btn-primary" style="display: none;">
-          <i class="fa-solid fa-check"></i> 確認匯入此筆帳目
+          <i class="fa-solid fa-check"></i> 確認匯入
         </button>
       </div>
-    </div>
-  </div>
-
-  <!-- Modal 3: Budget Settings Modal -->
-  <div id="modal-budgets" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3><i class="fa-solid fa-sliders"></i> 設定各類別月度預算</h3>
-        <button class="btn-close-modal">&times;</button>
-      </div>
-      <form id="form-budgets">
-        <div id="budget-inputs-list" class="budget-inputs-list">
-          <!-- Dynamically generated category budget inputs -->
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary btn-close-modal">取消</button>
-          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> 儲存預算設定</button>
-        </div>
-      </form>
     </div>
   </div>
 
