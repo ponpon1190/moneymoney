@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Fresh Grass Green Expense Tracker - Application Core Logic
+   拾光記帳 SageExpense - Editorial Morandi Core Logic
    ========================================================================== */
 
 // Default Categories & Budgets
@@ -96,7 +96,7 @@ function initCategoryDropdowns() {
   filterCategorySelect.innerHTML = filterOptionsHtml;
 }
 
-// --- Tab Navigation Setup ---
+// --- Tab Navigation ---
 function setupTabNavigation() {
   const desktopBtns = document.querySelectorAll('.desktop-tabs .tab-btn');
   const mobileNavBtns = document.querySelectorAll('.mobile-nav .mobile-nav-btn');
@@ -104,42 +104,25 @@ function setupTabNavigation() {
   function switchTab(targetTabId) {
     activeTab = targetTabId;
 
-    // Toggle active state for desktop buttons
-    desktopBtns.forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.tab === targetTabId);
-    });
+    desktopBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === targetTabId));
+    mobileNavBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === targetTabId));
 
-    // Toggle active state for mobile nav buttons
-    mobileNavBtns.forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.tab === targetTabId);
-    });
-
-    // Show active tab content
     document.querySelectorAll('.tab-content').forEach(content => {
       content.classList.toggle('active', content.id === targetTabId);
     });
 
-    // If charts tab activated, re-render charts so canvas dimensions update correctly
     if (targetTabId === 'tab-charts') {
       renderCharts();
     }
   }
 
-  desktopBtns.forEach(btn => {
-    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
-  });
-
+  desktopBtns.forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
   mobileNavBtns.forEach(btn => {
-    if (btn.dataset.tab) {
-      btn.addEventListener('click', () => switchTab(btn.dataset.tab));
-    }
+    if (btn.dataset.tab) btn.addEventListener('click', () => switchTab(btn.dataset.tab));
   });
 
-  // Mobile FAB button (+)
   const mobileFab = document.getElementById('mobile-fab-add');
-  if (mobileFab) {
-    mobileFab.addEventListener('click', () => openManualModal());
-  }
+  if (mobileFab) mobileFab.addEventListener('click', () => openManualModal());
 }
 
 // --- Main Render Controller ---
@@ -147,9 +130,7 @@ function renderApp() {
   renderMetrics();
   renderCategoryAnalysisTab();
   renderTransactionsTable();
-  if (activeTab === 'tab-charts') {
-    renderCharts();
-  }
+  if (activeTab === 'tab-charts') renderCharts();
   saveDataToStorage();
 }
 
@@ -188,7 +169,7 @@ function renderMetrics() {
 
   const balanceEl = document.getElementById('metric-net-balance');
   balanceEl.textContent = `NT$ ${netBalance.toLocaleString()}`;
-  balanceEl.style.color = netBalance >= 0 ? '#059669' : '#dc2626';
+  balanceEl.style.color = netBalance >= 0 ? '#4a6b5d' : '#bc5a45';
 
   document.getElementById('metric-savings-rate').textContent = `儲蓄率 ${savingsRate}% (${netBalance >= 0 ? '正向累積' : '超支'})`;
   document.getElementById('metric-budget-percent').textContent = `${budgetUsagePercent}%`;
@@ -214,12 +195,11 @@ function renderMetrics() {
   }
 }
 
-// --- 2. Tab 2: Monthly Category Expense Analysis ---
+// --- 2. Category Analysis Tab ---
 function renderCategoryAnalysisTab() {
   const summaryContainer = document.getElementById('category-summary-cards');
   const cardsContainer = document.getElementById('budget-cards-container');
 
-  // Compute category totals
   const categoryTotals = {};
   let totalExpense = 0;
 
@@ -231,7 +211,6 @@ function renderCategoryAnalysisTab() {
     }
   });
 
-  // Top spending category
   let topCategory = '無';
   let topAmount = 0;
   Object.keys(categoryTotals).forEach(cat => {
@@ -241,7 +220,6 @@ function renderCategoryAnalysisTab() {
     }
   });
 
-  // Render Top Analytics Row
   summaryContainer.innerHTML = `
     <div class="cat-stat-card">
       <h4>本月最高花費類別</h4>
@@ -257,7 +235,6 @@ function renderCategoryAnalysisTab() {
     </div>
   `;
 
-  // Render Budget Progress Cards for each category
   let html = '';
   Object.keys(DEFAULT_BUDGETS).forEach(cat => {
     const budget = budgets[cat] || DEFAULT_BUDGETS[cat];
@@ -301,7 +278,7 @@ function renderCategoryAnalysisTab() {
   cardsContainer.innerHTML = html;
 }
 
-// --- 3. Transactions Table Rendering ---
+// --- 3. Transactions Table ---
 function renderTransactionsTable() {
   const tbody = document.getElementById('transactions-table-body');
   const countBadge = document.getElementById('transaction-count-badge');
@@ -331,8 +308,8 @@ function renderTransactionsTable() {
   if (filtered.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="8" style="text-align: center; color: #7fa695; padding: 30px;">
-          尚無符合條件的交易明細
+        <td colspan="8" style="text-align: center; color: #9ab0a5; padding: 30px;">
+          尚無符合條件的交易紀錄
         </td>
       </tr>
     `;
@@ -343,7 +320,7 @@ function renderTransactionsTable() {
   filtered.forEach(tx => {
     const isIncome = tx.type === 'income';
     const amountStr = `${isIncome ? '+' : '-'} NT$ ${Number(tx.amount).toLocaleString()}`;
-    const amountColor = isIncome ? '#059669' : '#e11d48';
+    const amountColor = isIncome ? '#4a6b5d' : '#bc5a45';
 
     let natureLabel = '收入';
     let natureTagClass = 'tag-income';
@@ -367,7 +344,7 @@ function renderTransactionsTable() {
         <td style="font-weight: 600;">${tx.category}</td>
         <td>${tx.description}</td>
         <td style="font-weight: 700; color: ${amountColor};">${amountStr}</td>
-        <td><span style="font-size: 0.85rem; color: #335c4a;">${tx.payment}</span></td>
+        <td><span style="font-size: 0.85rem; color: #5c6b64;">${tx.payment}</span></td>
         <td>
           <button class="action-btn edit" onclick="editTransaction('${tx.id}')" title="編輯">
             <i class="fa-solid fa-pen"></i>
@@ -383,7 +360,7 @@ function renderTransactionsTable() {
   tbody.innerHTML = html;
 }
 
-// --- 4. Chart.js Visualization ---
+// --- 4. Chart.js Visualization (Morandi Sage Theme) ---
 function renderCharts() {
   renderDailyTrendChart();
   renderFixedVsVarChart();
@@ -415,11 +392,11 @@ function renderDailyTrendChart() {
       datasets: [{
         label: '每日支出 (NT$)',
         data: data.length > 0 ? data : [0, 0, 0, 0, 0, 0, 0],
-        borderColor: '#059669',
-        backgroundColor: 'rgba(5, 150, 105, 0.12)',
+        borderColor: '#4a6b5d',
+        backgroundColor: 'rgba(74, 107, 93, 0.12)',
         fill: true,
         tension: 0.3,
-        pointBackgroundColor: '#047857',
+        pointBackgroundColor: '#375146',
         pointRadius: 4
       }]
     },
@@ -428,7 +405,7 @@ function renderDailyTrendChart() {
       maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
-        y: { beginAtZero: true, grid: { color: '#e6f4ed' } },
+        y: { beginAtZero: true, grid: { color: '#f0ebe3' } },
         x: { grid: { display: false } }
       }
     }
@@ -462,7 +439,7 @@ function renderFixedVsVarChart() {
       datasets: [{
         label: '金額 (NT$)',
         data: [fixedTotal, varTotal],
-        backgroundColor: ['#0284c7', '#10b981'],
+        backgroundColor: ['#48697b', '#bc5a45'],
         borderRadius: 8
       }]
     },
@@ -471,7 +448,7 @@ function renderFixedVsVarChart() {
       maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
-        y: { beginAtZero: true, grid: { color: '#e6f4ed' } },
+        y: { beginAtZero: true, grid: { color: '#f0ebe3' } },
         x: { grid: { display: false } }
       }
     }
@@ -492,7 +469,7 @@ function renderCategoryPieChart() {
 
   const labels = Object.keys(catMap);
   const data = Object.values(catMap);
-  const colors = ['#059669', '#10b981', '#0ea5e9', '#f59e0b', '#8b5cf6', '#ec4899', '#3b82f6', '#64748b'];
+  const colors = ['#4a6b5d', '#bc5a45', '#48697b', '#c88a48', '#867494', '#9eb0a2', '#d99f8f', '#6c7a72'];
 
   if (categoryPieChart) categoryPieChart.destroy();
 
@@ -502,7 +479,7 @@ function renderCategoryPieChart() {
       labels: labels.length > 0 ? labels : ['無資料'],
       datasets: [{
         data: data.length > 0 ? data : [1],
-        backgroundColor: labels.length > 0 ? colors.slice(0, labels.length) : ['#d1fae5'],
+        backgroundColor: labels.length > 0 ? colors.slice(0, labels.length) : ['#cad8d0'],
         borderWidth: 2,
         borderColor: '#ffffff'
       }]
@@ -606,7 +583,7 @@ function parseNaturalLanguageText(text) {
   return results;
 }
 
-// --- 6. Invoice Scanner Simulation ---
+// --- 6. Invoice Scanner ---
 function setupInvoiceScanner() {
   const dropZone = document.getElementById('drop-zone');
   const fileInput = document.getElementById('file-invoice');
@@ -703,7 +680,7 @@ function exportCSV() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.setAttribute('href', url);
-  link.setAttribute('download', `GreenExpense_Backup_${new Date().toISOString().split('T')[0]}.csv`);
+  link.setAttribute('download', `SageExpense_Backup_${new Date().toISOString().split('T')[0]}.csv`);
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -749,7 +726,7 @@ function importCSV(file) {
   reader.readAsText(file);
 }
 
-// --- 8. Event Listeners & Modals ---
+// --- 8. Event Listeners ---
 function setupEventListeners() {
   document.getElementById('btn-ai-parse').addEventListener('click', handleAiParse);
   document.querySelectorAll('.chip').forEach(chip => {
