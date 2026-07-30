@@ -687,75 +687,94 @@ async function processInvoiceFile(file) {
   img.src = imageUrl;
   await new Promise((resolve) => { img.onload = resolve; });
 
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-  canvas.width = img.width;
-  canvas.height = img.height;
-  ctx.drawImage(img, 0, 0);
-
-  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
   let scannedMerchant = '發票消費';
   let scannedDate = new Date().toISOString().split('T')[0];
   let scannedAmount = 0;
   let scannedCategory = '日常用品';
   let scannedPayment = '現金';
   let isQrSuccess = false;
+  let qrMethodName = '';
 
-  // 1. Try jsQR for Taiwan Electronic Invoice 2D QR Code
-  if (window.jsQR) {
+  // --- ENGINE 1: Native BarcodeDetector (Chrome / Android / Edge) ---
+  if ('BarcodeDetector' in window) {
     try {
-      const code = jsQR(imageData.data, imageData.width, imageData.height, {
-        inversionAttempts: "dontInvert",
-      });
+      const barcodeDetector = new BarcodeDetector({ formats: ['qr_code', 'code_128', 'ean_13', 'pdf417'] });
+      const barcodes = await barcodeDetector.detect(img);
 
-      if (code && code.data && code.data.length >= 30) {
-        const rawData = code.data;
-        // Taiwan E-Invoice Left QR Code standard layout:
-        // Chars 0-9: Invoice No
-        // Chars 10-16: ROC Date YYYMMDD
-        // Chars 17-20: Random Code
-        // Chars 21-28: Sales Amount (Hex)
-        // Chars 29-36: Total Amount (Hex)
-        const invNo = rawData.substring(0, 10);
-        const rocDateStr = rawData.substring(10, 17);
-        const hexTotal = rawData.substring(29, 37);
-
-        const rocYear = parseInt(rocDateStr.substring(0, 3));
-        const month = rocDateStr.substring(3, 5);
-        const day = rocDateStr.substring(5, 7);
-
-        if (!isNaN(rocYear) && rocYear > 80 && rocYear < 150) {
-          const adYear = rocYear + 1911;
-          scannedDate = `${adYear}-${month}-${day}`;
+      for (const barcode of barcodes) {
+        if (barcode.rawValue) {
+          const parsed = parseTaiwanInvoiceQr(barcode.rawValue);
+          if (parsed.success) {
+            scannedDate = parsed.date;
+            scannedAmount = parsed.amount;
+            scannedMerchant = `電子發票 (${parsed.invNo})`;
+            isQrSuccess = true;
+            qrMethodName = '✅ 原生 QR Code 條碼解密';
+            break;
+          }
         }
-
-        const totalAmt = parseInt(hexTotal, 16);
-        if (!isNaN(totalAmt) && totalAmt > 0) {
-          scannedAmount = totalAmt;
-        }
-
-        scannedMerchant = `電子發票 (${invNo})`;
-        isQrSuccess = true;
       }
-    } catch (qrErr) {
-      console.warn('QR scan error:', qrErr);
+    } catch (e) {
+      console.warn('Native BarcodeDetector check skipped/failed:', e);
     }
   }
 
-  // 2. OCR Text Analysis using Tesseract.js if QR code missing or amount not parsed
+  // --- ENGINE 2: Multi-Scale jsQR Scanning ---
+  if (!isQrSuccess && window.jsQR) {
+    const maxDims = [1000, 600, 1400, img.width];
+    for (const maxDim of maxDims) {
+      if (isQrSuccess) break;
+
+      let scale = 1;
+      if (Math.max(img.width, img.height) > maxDim) {
+        scale = maxDim / Math.max(img.width, img.height);
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.floor(img.width * scale);
+      canvas.height = Math.floor(img.height * scale);
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const code = jsQR(imageData.data, imageData.width, imageData.height, {
+        inversionAttempts: "attemptBoth",
+      });
+
+      if (code && code.data) {
+        const parsed = parseTaiwanInvoiceQr(code.data);
+        if (parsed.success) {
+          scannedDate = parsed.date;
+          scannedAmount = parsed.amount;
+          scannedMerchant = `電子發票 (${parsed.invNo})`;
+          isQrSuccess = true;
+          qrMethodName = '✅ QR Code 二維條碼解密';
+          break;
+        }
+      }
+    }
+  }
+
+  // --- ENGINE 3: OCR Text Analysis with Tesseract.js (Fallback) ---
   if (!isQrSuccess || scannedAmount <= 0) {
-    if (statusText) statusText.textContent = '📄 使用 AI OCR 辨識內文中...';
+    if (statusText) statusText.textContent = '📄 AI OCR 辨識內文中...';
     try {
       if (window.Tesseract) {
-        const result = await Tesseract.recognize(file, 'chi_tra+eng', {
+        const ocrPromise = Tesseract.recognize(file, 'chi_tra+eng', {
           logger: m => {
             if (m.status === 'recognizing text' && statusText) {
               statusText.textContent = `📄 AI OCR 辨識中 (${Math.round((m.progress || 0) * 100)}%)...`;
             }
           }
         });
-        const text = result.data ? result.data.text : '';
+
+        // 8 Seconds Timeout limit for OCR so UI never hangs
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('OCR Timeout')), 8000)
+        );
+
+        const result = await Promise.race([ocrPromise, timeoutPromise]);
+        const text = result && result.data ? result.data.text : '';
 
         // Extract Amounts
         const amountMatches = text.match(/(?:NT\$|\$|金額|總計|小計|合計|總額)\s*[:：]?\s*(\d+)/gi);
@@ -786,39 +805,39 @@ async function processInvoiceFile(file) {
           scannedDate = `${y}-${m}-${d}`;
         }
 
-        // Merchant and category prediction
-        if (/7-eleven|統一超商|全家|family|萊爾富|ok超商/i.test(text)) {
-          if (/7-eleven|統一超商/i.test(text)) scannedMerchant = '7-ELEVEN 統一超商';
-          else if (/全家|family/i.test(text)) scannedMerchant = '全家便利商店';
-          else if (/萊爾富/i.test(text)) scannedMerchant = '萊爾富 Hi-Life';
-          else scannedMerchant = '超商消費';
-          scannedCategory = '餐飲';
-          scannedPayment = 'LINE Pay';
-        } else if (/全聯|大潤發|家樂福|愛買|pxmart|carrefour/i.test(text)) {
-          scannedMerchant = '全聯福利中心 / 超市';
-          scannedCategory = '日常用品';
-          scannedPayment = '信用卡';
-        } else if (/捷運|高鐵|臺鐵|uber|計程車|加油/i.test(text)) {
-          scannedMerchant = '交通票證 / 移動費';
-          scannedCategory = '交通';
-        } else {
+        // Merchant prediction
+        if (/7-eleven|統一超商/i.test(text)) { scannedMerchant = '7-ELEVEN 統一超商'; scannedCategory = '餐飲'; scannedPayment = 'LINE Pay'; }
+        else if (/全家|family/i.test(text)) { scannedMerchant = '全家便利商店'; scannedCategory = '餐飲'; scannedPayment = 'LINE Pay'; }
+        else if (/萊爾富/i.test(text)) { scannedMerchant = '萊爾富 Hi-Life'; scannedCategory = '餐飲'; }
+        else if (/全聯|pxmart/i.test(text)) { scannedMerchant = '全聯福利中心'; scannedCategory = '日常用品'; scannedPayment = '信用卡'; }
+        else if (/家樂福|大潤發|愛買/i.test(text)) { scannedMerchant = '量販店超市'; scannedCategory = '日常用品'; }
+        else if (/捷運|高鐵|臺鐵|uber|計程車|加油/i.test(text)) { scannedMerchant = '交通移動費'; scannedCategory = '交通'; }
+        else {
           const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 1);
           if (lines.length > 0) scannedMerchant = lines[0].substring(0, 20);
         }
       }
     } catch (ocrErr) {
-      console.warn('OCR error:', ocrErr);
+      console.warn('OCR error or timeout:', ocrErr);
     }
   }
 
-  // Hide scanner preview and show editable results box
+  // Display results
   scanContainer.style.display = 'none';
   ocrBox.style.display = 'block';
   btnConfirm.style.display = 'inline-flex';
 
   if (methodBadge) {
-    methodBadge.textContent = isQrSuccess ? '✅ QR Code 辨識成功' : '📄 AI OCR 辨識';
-    methodBadge.className = isQrSuccess ? 'badge badge-success' : 'badge badge-warning';
+    if (isQrSuccess) {
+      methodBadge.textContent = qrMethodName || '✅ QR Code 辨識成功';
+      methodBadge.className = 'badge badge-success';
+    } else if (scannedAmount > 0) {
+      methodBadge.textContent = '📄 AI OCR 文字辨識';
+      methodBadge.className = 'badge badge-warning';
+    } else {
+      methodBadge.textContent = '✍️ 請確認或手動填寫金額';
+      methodBadge.className = 'badge badge-danger';
+    }
   }
 
   const mInput = document.getElementById('ocr-merchant-input');
@@ -832,6 +851,39 @@ async function processInvoiceFile(file) {
   if (aInput) aInput.value = scannedAmount > 0 ? scannedAmount : '';
   if (cSelect) cSelect.value = scannedCategory;
   if (pSelect) pSelect.value = scannedPayment;
+}
+
+// Helper to parse Taiwan Electronic Invoice QR code standard layout
+function parseTaiwanInvoiceQr(rawData) {
+  if (!rawData || typeof rawData !== 'string') return { success: false };
+
+  // Match 10-char invoice no + 7-char ROC date + 4-char random + 8-char sales hex + 8-char total hex
+  const match = rawData.match(/([A-Z]{2}\d{8})(\d{7})[0-9a-zA-Z]{4}([0-9a-fA-F]{8})([0-9a-fA-F]{8})/);
+
+  if (match) {
+    const invNo = match[1];
+    const rocDateStr = match[2];
+    const hexTotal = match[4];
+
+    const rocYear = parseInt(rocDateStr.substring(0, 3));
+    const month = rocDateStr.substring(3, 5);
+    const day = rocDateStr.substring(5, 7);
+
+    let date = new Date().toISOString().split('T')[0];
+    if (!isNaN(rocYear) && rocYear > 80 && rocYear < 150) {
+      date = `${rocYear + 1911}-${month}-${day}`;
+    }
+
+    const amount = parseInt(hexTotal, 16);
+    return {
+      success: true,
+      invNo: invNo,
+      date: date,
+      amount: !isNaN(amount) && amount > 0 ? amount : 0
+    };
+  }
+
+  return { success: false };
 }
 
 // --- 7. CSV Export & Import ---
