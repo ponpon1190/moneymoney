@@ -1,8 +1,7 @@
 /* ==========================================================================
-   拾光記帳 SageExpense - Editorial Morandi Core Logic
+   拾光記帳 SageExpense - Editorial Morandi Core Logic (UX Enhanced)
    ========================================================================== */
 
-// Default Categories & Budgets
 const DEFAULT_BUDGETS = {
   '餐飲': 8000,
   '交通': 3000,
@@ -34,25 +33,18 @@ const CATEGORY_ICONS = {
   '其他支出': 'fa-receipt'
 };
 
+// 精簡初始 4 筆極簡範例資料
 const INITIAL_TRANSACTIONS = [
-  { id: 'tx-1', date: '2026-07-05', type: 'income', nature: 'income', category: '薪資收入', amount: 60000, payment: '銀行轉帳', description: '七月份公司發薪' },
-  { id: 'tx-2', date: '2026-07-06', type: 'expense', nature: 'fixed-monthly', category: '電信費', amount: 999, payment: '信用卡', description: '電信5G月租費' },
-  { id: 'tx-3', date: '2026-07-08', type: 'expense', nature: 'fixed-monthly', category: '影音訂閱', amount: 390, payment: '信用卡', description: 'Netflix 高級版月費' },
-  { id: 'tx-4', date: '2026-07-08', type: 'expense', nature: 'fixed-monthly', category: '影音訂閱', amount: 268, payment: '信用卡', description: 'Spotify 家庭版' },
-  { id: 'tx-5', date: '2026-07-10', type: 'expense', nature: 'fixed-bimonthly', category: '水電費', amount: 1850, payment: '銀行轉帳', description: '6-7月台電電費自動扣繳' },
-  { id: 'tx-6', date: '2026-07-12', type: 'expense', nature: 'variable', category: '餐飲', amount: 150, payment: 'LINE Pay', description: '公司附近池上便當午餐' },
-  { id: 'tx-7', date: '2026-07-15', type: 'expense', nature: 'variable', category: '餐飲', amount: 1250, payment: '信用卡', description: '週末好友美式餐廳聚餐' },
-  { id: 'tx-8', date: '2026-07-18', type: 'expense', nature: 'variable', category: '交通', amount: 500, payment: '現金', description: '悠遊卡捷運自動加值' },
-  { id: 'tx-9', date: '2026-07-20', type: 'expense', nature: 'variable', category: '交通', amount: 220, payment: 'LINE Pay', description: '加班雨天搭乘 Uber 回家' },
-  { id: 'tx-10', date: '2026-07-22', type: 'expense', nature: 'variable', category: '日常用品', amount: 1450, payment: 'LINE Pay', description: '全聯福利中心補貨生活用品' },
-  { id: 'tx-11', date: '2026-07-25', type: 'expense', nature: 'variable', category: '娛樂購物', amount: 2800, payment: '信用卡', description: '百貨公司夏季折扣治裝' },
-  { id: 'tx-12', date: '2026-07-28', type: 'expense', nature: 'variable', category: '餐飲', amount: 450, payment: 'LINE Pay', description: '星巴克咖啡與下午茶' },
-  { id: 'tx-13', date: '2026-07-30', type: 'expense', nature: 'variable', category: '醫療健康', amount: 200, payment: '現金', description: '耳鼻喉科看診掛號費' }
+  { id: 'tx-1', date: '2026-07-05', type: 'income', nature: 'income', category: '薪資收入', amount: 60000, payment: '銀行轉帳', description: '七月份薪資收入' },
+  { id: 'tx-2', date: '2026-07-08', type: 'expense', nature: 'fixed-monthly', category: '影音訂閱', amount: 390, payment: '信用卡', description: 'Netflix 高級版月費' },
+  { id: 'tx-3', date: '2026-07-12', type: 'expense', nature: 'variable', category: '餐飲', amount: 150, payment: 'LINE Pay', description: '午餐池上便當' },
+  { id: 'tx-4', date: '2026-07-20', type: 'expense', nature: 'variable', category: '交通', amount: 220, payment: 'LINE Pay', description: '搭乘 Uber 計程車' }
 ];
 
 // App State
 let transactions = [];
 let budgets = {};
+let selectedTxIds = new Set();
 let activeTab = 'tab-dashboard';
 let dailyTrendChart = null;
 let fixedVsVarChart = null;
@@ -96,7 +88,7 @@ function initCategoryDropdowns() {
   filterCategorySelect.innerHTML = filterOptionsHtml;
 }
 
-// --- Tab Navigation ---
+// --- Tab Navigation Setup ---
 function setupTabNavigation() {
   const desktopBtns = document.querySelectorAll('.desktop-tabs .tab-btn');
   const mobileNavBtns = document.querySelectorAll('.mobile-nav .mobile-nav-btn');
@@ -111,9 +103,7 @@ function setupTabNavigation() {
       content.classList.toggle('active', content.id === targetTabId);
     });
 
-    if (targetTabId === 'tab-charts') {
-      renderCharts();
-    }
+    if (targetTabId === 'tab-charts') renderCharts();
   }
 
   desktopBtns.forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
@@ -278,7 +268,7 @@ function renderCategoryAnalysisTab() {
   cardsContainer.innerHTML = html;
 }
 
-// --- 3. Transactions Table ---
+// --- 3. Transactions Table Rendering with Batch Select & Intuitive Pills ---
 function renderTransactionsTable() {
   const tbody = document.getElementById('transactions-table-body');
   const countBadge = document.getElementById('transaction-count-badge');
@@ -305,11 +295,13 @@ function renderTransactionsTable() {
   filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
   countBadge.textContent = `共 ${filtered.length} 筆紀錄`;
 
+  updateBatchActionBar();
+
   if (filtered.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="8" style="text-align: center; color: #9ab0a5; padding: 30px;">
-          尚無符合條件的交易紀錄
+        <td colspan="9" style="text-align: center; color: #9ab0a5; padding: 30px;">
+          尚無符合條件的交易明細
         </td>
       </tr>
     `;
@@ -336,8 +328,13 @@ function renderTransactionsTable() {
       '<span class="tag tag-income">收入</span>' : 
       '<span class="tag tag-expense">支出</span>';
 
+    const isChecked = selectedTxIds.has(tx.id) ? 'checked' : '';
+
     html += `
       <tr>
+        <td style="text-align: center;">
+          <input type="checkbox" class="chk-select-tx" data-id="${tx.id}" ${isChecked}>
+        </td>
         <td style="font-weight: 500;">${tx.date}</td>
         <td>${typeBadge}</td>
         <td><span class="tag ${natureTagClass}">${natureLabel}</span></td>
@@ -345,22 +342,46 @@ function renderTransactionsTable() {
         <td>${tx.description}</td>
         <td style="font-weight: 700; color: ${amountColor};">${amountStr}</td>
         <td><span style="font-size: 0.85rem; color: #5c6b64;">${tx.payment}</span></td>
-        <td>
-          <button class="action-btn edit" onclick="editTransaction('${tx.id}')" title="編輯">
-            <i class="fa-solid fa-pen"></i>
-          </button>
-          <button class="action-btn delete" onclick="deleteTransaction('${tx.id}')" title="刪除">
-            <i class="fa-solid fa-trash-can"></i>
-          </button>
+        <td style="text-align: center;">
+          <div class="actions-cell">
+            <button class="btn-action-pill edit" onclick="editTransaction('${tx.id}')" title="編輯這筆帳目">
+              <i class="fa-solid fa-pen"></i> 編輯
+            </button>
+            <button class="btn-action-pill delete" onclick="deleteTransaction('${tx.id}')" title="刪除這筆帳目">
+              <i class="fa-solid fa-trash-can"></i> 刪除
+            </button>
+          </div>
         </td>
       </tr>
     `;
   });
 
   tbody.innerHTML = html;
+
+  // Add Checkbox event listeners
+  document.querySelectorAll('.chk-select-tx').forEach(chk => {
+    chk.addEventListener('change', (e) => {
+      const id = e.target.dataset.id;
+      if (e.target.checked) selectedTxIds.add(id);
+      else selectedTxIds.delete(id);
+      updateBatchActionBar();
+    });
+  });
 }
 
-// --- 4. Chart.js Visualization (Morandi Sage Theme) ---
+function updateBatchActionBar() {
+  const batchBar = document.getElementById('batch-action-bar');
+  const countEl = document.getElementById('batch-selected-count');
+
+  if (selectedTxIds.size > 0) {
+    batchBar.style.display = 'inline-flex';
+    countEl.textContent = `已選擇 ${selectedTxIds.size} 筆`;
+  } else {
+    batchBar.style.display = 'none';
+  }
+}
+
+// --- 4. Chart.js Visualization ---
 function renderCharts() {
   renderDailyTrendChart();
   renderFixedVsVarChart();
@@ -726,7 +747,7 @@ function importCSV(file) {
   reader.readAsText(file);
 }
 
-// --- 8. Event Listeners ---
+// --- 8. Event Listeners & Batch Delete ---
 function setupEventListeners() {
   document.getElementById('btn-ai-parse').addEventListener('click', handleAiParse);
   document.querySelectorAll('.chip').forEach(chip => {
@@ -739,6 +760,59 @@ function setupEventListeners() {
   document.getElementById('filter-search').addEventListener('input', renderTransactionsTable);
   document.getElementById('filter-type').addEventListener('change', renderTransactionsTable);
   document.getElementById('filter-category').addEventListener('change', renderTransactionsTable);
+
+  // Checkbox Select All
+  const chkSelectAll = document.getElementById('chk-select-all');
+  if (chkSelectAll) {
+    chkSelectAll.addEventListener('change', (e) => {
+      const isChecked = e.target.checked;
+      selectedTxIds.clear();
+      if (isChecked) {
+        transactions.forEach(t => selectedTxIds.add(t.id));
+      }
+      renderTransactionsTable();
+    });
+  }
+
+  // Batch Delete
+  const btnBatchDelete = document.getElementById('btn-batch-delete');
+  if (btnBatchDelete) {
+    btnBatchDelete.addEventListener('click', () => {
+      if (selectedTxIds.size === 0) return;
+      if (confirm(`確定要刪除已選擇的 ${selectedTxIds.size} 筆紀錄嗎？`)) {
+        transactions = transactions.filter(t => !selectedTxIds.has(t.id));
+        selectedTxIds.clear();
+        if (chkSelectAll) chkSelectAll.checked = false;
+        renderApp();
+      }
+    });
+  }
+
+  // Reset Demo Data Button
+  const btnResetDemo = document.getElementById('btn-reset-demo');
+  if (btnResetDemo) {
+    btnResetDemo.addEventListener('click', () => {
+      if (confirm('確定要將帳目重置為精簡的 4 筆範例資料嗎？現有資料將會被覆蓋。')) {
+        transactions = JSON.parse(JSON.stringify(INITIAL_TRANSACTIONS));
+        selectedTxIds.clear();
+        renderApp();
+        alert('✅ 已成功重置為精簡 4 筆範例資料！');
+      }
+    });
+  }
+
+  // Clear All Data Button
+  const btnClearAll = document.getElementById('btn-clear-all');
+  if (btnClearAll) {
+    btnClearAll.addEventListener('click', () => {
+      if (confirm('⚠️ 警告：確定要清空所有記帳紀錄嗎？此動作無法復原。')) {
+        transactions = [];
+        selectedTxIds.clear();
+        renderApp();
+        alert('已清空所有帳目紀錄！');
+      }
+    });
+  }
 
   document.getElementById('btn-export-csv').addEventListener('click', exportCSV);
   document.getElementById('input-import-csv').addEventListener('change', (e) => {
@@ -835,6 +909,7 @@ function saveManualTransaction() {
 function deleteTransaction(id) {
   if (confirm('確定要刪除這筆紀錄嗎？')) {
     transactions = transactions.filter(t => t.id !== id);
+    selectedTxIds.delete(id);
     renderApp();
   }
 }

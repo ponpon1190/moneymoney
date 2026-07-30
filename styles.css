@@ -3,22 +3,21 @@
    ========================================================================== */
 
 :root {
-  /* 溫潤莫蘭迪植物苔綠與質感米白色調 */
   --bg-main: #f7f6f2;             /* 溫潤奶油紙米色 (Soft Paper Cream) */
   --bg-card: #ffffff;
   --bg-card-hover: #f2efe9;       /* 柔和細緻亞麻 */
   
-  --text-primary: #2b3531;        /* 沉穩松墨灰 (Deep Charcoal Green) */
+  --text-primary: #2b3531;        /* 沉穩松墨灰 */
   --text-secondary: #5c6b64;      /* 靜謐莫蘭迪灰綠 */
   --text-muted: #9ab0a5;          /* 柔和淡草灰 */
   
   --primary-color: #4a6b5d;        /* 經典莫蘭迪苔綠 (Morandi Sage Green) */
-  --primary-hover: #375146;        /* 沉穩深苔綠 */
-  --primary-light: #e8f0ec;        /* 淡薄荷奶綠 */
-  --primary-border: #cad8d0;       /* 質感草木邊框 */
+  --primary-hover: #375146;        
+  --primary-light: #e8f0ec;        
+  --primary-border: #cad8d0;       
 
-  --accent-terracotta: #bc5a45;   /* 溫暖赤陶赭紅 (Muted Terracotta) */
-  --accent-gold: #c88a48;         /* 暖琥珀木色 (Warm Amber Gold) */
+  --accent-terracotta: #bc5a45;   /* 溫暖赤陶赭紅 */
+  --accent-gold: #c88a48;         
 
   --income-color: #4a6b5d;
   --income-bg: #e8f0ec;
@@ -40,7 +39,7 @@
   --danger-bg: #fcf0ed;
   --danger-border: #eecbc4;
 
-  --border-color: #e5dfd5;        /* 溫潤細緻米灰邊框 */
+  --border-color: #e5dfd5;        
   --border-subtle: #f0ebe3;
   
   --shadow-sm: 0 2px 8px rgba(43, 53, 49, 0.03);
@@ -71,7 +70,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* App Container Layout */
 .app-container {
   max-width: 1140px;
   margin: 0 auto;
@@ -81,9 +79,7 @@ body {
   gap: 22px;
 }
 
-/* ==========================================================================
-   Header & Brand (文青藝文風格)
-   ========================================================================== */
+/* Header & Brand */
 .app-header {
   display: flex;
   justify-content: space-between;
@@ -129,13 +125,11 @@ body {
   font-weight: 500;
   color: var(--primary-color);
   margin-left: 8px;
-  letter-spacing: 0.5px;
 }
 
 .brand-subtitle {
   font-size: 0.82rem;
   color: var(--text-secondary);
-  letter-spacing: 0.2px;
 }
 
 .header-actions {
@@ -151,14 +145,13 @@ body {
   justify-content: center;
   gap: 8px;
   padding: 10px 20px;
-  border-radius: 20px; /* 文青膠囊風圓角 */
+  border-radius: 20px;
   font-family: var(--font-body);
   font-size: 0.88rem;
   font-weight: 600;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  letter-spacing: 0.3px;
+  transition: all 0.2s ease;
 }
 
 .btn-primary {
@@ -177,9 +170,7 @@ body {
   color: #ffffff;
 }
 
-.btn-secondary:hover {
-  background-color: #4a5751;
-}
+.btn-secondary:hover { background-color: #4a5751; }
 
 .btn-outline {
   background-color: var(--bg-card);
@@ -197,15 +188,33 @@ body {
   font-size: 0.8rem;
 }
 
+.btn-danger-sm {
+  background-color: var(--expense-bg);
+  color: var(--expense-color);
+  border: 1px solid var(--expense-border);
+  padding: 6px 14px;
+  border-radius: 16px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-danger-sm:hover {
+  background-color: var(--expense-color);
+  color: #ffffff;
+}
+
 .btn-ai {
   background: linear-gradient(135deg, #5c7e70 0%, #4a6b5d 100%);
   color: #ffffff;
   padding: 10px 22px;
 }
 
-/* ==========================================================================
-   Desktop Tabs Navigation (文青分頁選單)
-   ========================================================================== */
+/* Desktop Tabs */
 .desktop-tabs {
   display: flex;
   gap: 10px;
@@ -231,8 +240,7 @@ body {
   font-weight: 600;
   border-radius: 12px;
   cursor: pointer;
-  transition: all 0.25s ease;
-  letter-spacing: 0.3px;
+  transition: all 0.2s ease;
 }
 
 .tab-btn:hover {
@@ -246,10 +254,9 @@ body {
   box-shadow: 0 4px 12px rgba(74, 107, 93, 0.2);
 }
 
-/* Tab Content */
 .tab-content {
   display: none;
-  animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeIn 0.25s ease-out;
 }
 
 .tab-content.active {
@@ -259,13 +266,11 @@ body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ==========================================================================
-   AI Rapid Entry Section
-   ========================================================================== */
+/* AI Rapid Entry Section */
 .ai-input-card {
   background-color: var(--bg-card);
   border: 1.5px solid var(--primary-border);
@@ -295,13 +300,9 @@ body {
   font-size: 0.82rem;
   padding: 4px 14px;
   border-radius: 20px;
-  letter-spacing: 0.3px;
 }
 
-.ai-tip {
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-}
+.ai-tip { font-size: 0.82rem; color: var(--text-secondary); }
 
 .ai-input-box {
   display: flex;
@@ -319,7 +320,6 @@ body {
   outline: none;
   background-color: var(--bg-main);
   color: var(--text-primary);
-  transition: border-color 0.2s, background-color 0.2s;
 }
 
 .ai-input-box input:focus {
@@ -335,11 +335,7 @@ body {
   flex-wrap: wrap;
 }
 
-.chip-label {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  font-weight: 600;
-}
+.chip-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
 
 .chip {
   background-color: var(--bg-main);
@@ -359,9 +355,7 @@ body {
   color: var(--primary-color);
 }
 
-/* ==========================================================================
-   Metrics Overview Cards (文青高質感數字卡片)
-   ========================================================================== */
+/* Metrics Overview Cards */
 .metrics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -377,12 +371,6 @@ body {
   display: flex;
   align-items: flex-start;
   gap: 16px;
-  transition: transform 0.2s ease;
-}
-
-.metric-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
 }
 
 .metric-icon {
@@ -408,40 +396,13 @@ body {
   gap: 2px;
 }
 
-.metric-title {
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-  font-weight: 600;
-  letter-spacing: 0.3px;
-}
-
-.metric-info h2 {
-  font-family: var(--font-heading);
-  font-size: 1.6rem;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
-
-.metric-sub {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-}
-
-.expense-breakdown {
-  display: flex;
-  gap: 8px;
-  font-size: 0.78rem;
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
+.metric-title { font-size: 0.82rem; color: var(--text-secondary); font-weight: 600; }
+.metric-info h2 { font-family: var(--font-heading); font-size: 1.6rem; font-weight: 700; }
+.metric-sub { font-size: 0.78rem; color: var(--text-muted); }
+.expense-breakdown { display: flex; gap: 8px; font-size: 0.78rem; color: var(--text-secondary); font-weight: 500; }
 .divider { color: var(--border-color); }
 
-.metric-header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+.metric-header-row { display: flex; justify-content: space-between; align-items: center; }
 
 /* Badges */
 .badge {
@@ -474,9 +435,7 @@ body {
 .progress-bar-fill.warning { background-color: var(--warning-color); }
 .progress-bar-fill.danger { background-color: var(--danger-color); }
 
-/* ==========================================================================
-   Category Analysis Cards
-   ========================================================================== */
+/* Category Analysis Cards */
 .cat-analysis-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -494,16 +453,8 @@ body {
   gap: 6px;
 }
 
-.cat-stat-card h4 {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-}
-
-.cat-stat-card h3 {
-  font-family: var(--font-heading);
-  font-size: 1.45rem;
-  color: var(--primary-color);
-}
+.cat-stat-card h4 { font-size: 0.85rem; color: var(--text-secondary); }
+.cat-stat-card h3 { font-family: var(--font-heading); font-size: 1.45rem; color: var(--primary-color); }
 
 .budget-cards-grid {
   display: grid;
@@ -521,41 +472,14 @@ body {
   gap: 10px;
 }
 
-.budget-item-card.warn {
-  border-color: var(--warning-border);
-  background-color: var(--warning-bg);
-}
+.budget-item-card.warn { border-color: var(--warning-border); background-color: var(--warning-bg); }
+.budget-item-card.exceeded { border-color: var(--danger-border); background-color: var(--danger-bg); }
 
-.budget-item-card.exceeded {
-  border-color: var(--danger-border);
-  background-color: var(--danger-bg);
-}
+.budget-item-top { display: flex; justify-content: space-between; align-items: center; }
+.category-title { font-weight: 700; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
+.budget-values { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--text-secondary); }
 
-.budget-item-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.category-title {
-  font-weight: 700;
-  font-size: 0.95rem;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--text-primary);
-}
-
-.budget-values {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-}
-
-/* ==========================================================================
-   Section Card Common
-   ========================================================================== */
+/* Section Card Common */
 .section-card {
   background-color: var(--bg-card);
   border-radius: var(--radius-lg);
@@ -586,14 +510,9 @@ body {
   gap: 8px;
 }
 
-.section-header p {
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-}
+.section-header p { font-size: 0.82rem; color: var(--text-secondary); }
 
-/* ==========================================================================
-   Visual Charts Grid
-   ========================================================================== */
+/* Visual Charts Grid */
 .charts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
@@ -601,34 +520,23 @@ body {
 }
 
 .chart-card { gap: 14px; }
+.chart-header h3 { font-family: var(--font-heading); font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.chart-subtitle { font-size: 0.78rem; color: var(--text-muted); }
+.chart-wrapper { position: relative; height: 260px; width: 100%; }
 
-.chart-header h3 {
-  font-family: var(--font-heading);
-  font-size: 1.05rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.chart-subtitle {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-}
-
-.chart-wrapper {
-  position: relative;
-  height: 260px;
-  width: 100%;
-}
-
-/* ==========================================================================
-   Transactions List & Table (文青優雅明細)
-   ========================================================================== */
+/* Transactions Section Header & Batch Bar */
 .transactions-header {
   display: flex;
   flex-direction: column;
   gap: 14px;
+}
+
+.header-left-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .header-left {
@@ -644,6 +552,23 @@ body {
   font-weight: 700;
   padding: 3px 12px;
   border-radius: 12px;
+}
+
+.batch-action-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: var(--expense-bg);
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--expense-border);
+  animation: fadeIn 0.2s ease;
+}
+
+.batch-action-bar span {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--expense-color);
 }
 
 .filter-toolbar {
@@ -705,7 +630,7 @@ body {
 }
 
 .data-table td {
-  padding: 13px 16px;
+  padding: 12px 16px;
   border-bottom: 1px solid var(--border-subtle);
   white-space: nowrap;
 }
@@ -725,22 +650,50 @@ body {
 .tag-fixed { background-color: var(--fixed-bg); color: var(--fixed-color); border: 1px solid var(--fixed-border); }
 .tag-var { background-color: #fdf6ec; color: #b87333; border: 1px solid #f5e4ce; }
 
-.action-btn {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  padding: 4px 6px;
-  font-size: 0.9rem;
-  transition: color 0.2s;
+/* Action Pill Buttons for Intuitive Editing & Deletion */
+.actions-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
-.action-btn.edit:hover { color: var(--primary-color); }
-.action-btn.delete:hover { color: var(--expense-color); }
+.btn-action-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
 
-/* ==========================================================================
-   Mobile Bottom Navigation Bar (手機版文青底部選單)
-   ========================================================================== */
+.btn-action-pill.edit {
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+  border-color: var(--primary-border);
+}
+
+.btn-action-pill.edit:hover {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+.btn-action-pill.delete {
+  background-color: var(--expense-bg);
+  color: var(--expense-color);
+  border-color: var(--expense-border);
+}
+
+.btn-action-pill.delete:hover {
+  background-color: var(--expense-color);
+  color: #ffffff;
+}
+
+/* Mobile Bottom Navigation Bar */
 .mobile-nav {
   display: none;
   position: fixed;
@@ -773,10 +726,7 @@ body {
 }
 
 .mobile-nav-btn i { font-size: 1.2rem; }
-
-.mobile-nav-btn.active {
-  color: var(--primary-color);
-}
+.mobile-nav-btn.active { color: var(--primary-color); }
 
 .mobile-fab {
   width: 52px;

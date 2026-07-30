@@ -150,19 +150,29 @@
         </div>
       </section>
 
-      <!-- Transactions List -->
+      <!-- Transactions List Section -->
       <section class="section-card">
         <div class="transactions-header">
-          <div class="header-left">
-            <h2><i class="fa-solid fa-list"></i> 近期收支明細</h2>
-            <span id="transaction-count-badge" class="count-badge">共 0 筆紀錄</span>
+          <div class="header-left-row">
+            <div class="header-left">
+              <h2><i class="fa-solid fa-list"></i> 近期收支明細</h2>
+              <span id="transaction-count-badge" class="count-badge">共 0 筆紀錄</span>
+            </div>
+            
+            <!-- Batch Action Bar -->
+            <div id="batch-action-bar" class="batch-action-bar" style="display: none;">
+              <span id="batch-selected-count">已選擇 0 筆</span>
+              <button id="btn-batch-delete" class="btn btn-danger-sm">
+                <i class="fa-solid fa-trash-can"></i> 批量刪除已勾選
+              </button>
+            </div>
           </div>
           
           <!-- Filter Bar -->
           <div class="filter-toolbar">
             <div class="search-box">
               <i class="fa-solid fa-magnifying-glass"></i>
-              <input type="text" id="filter-search" placeholder="搜尋項目描述...">
+              <input type="text" id="filter-search" placeholder="搜尋描述或分類...">
             </div>
             
             <select id="filter-type">
@@ -178,10 +188,14 @@
           </div>
         </div>
 
+        <!-- Transactions Table -->
         <div class="table-container">
           <table class="data-table">
             <thead>
               <tr>
+                <th style="width: 40px; text-align: center;">
+                  <input type="checkbox" id="chk-select-all" title="全選/取消全選">
+                </th>
                 <th>日期</th>
                 <th>類型</th>
                 <th>屬性</th>
@@ -189,7 +203,7 @@
                 <th>描述 / 商家</th>
                 <th>金額 (NT$)</th>
                 <th>支付管道</th>
-                <th>操作</th>
+                <th style="text-align: center;">操作選項</th>
               </tr>
             </thead>
             <tbody id="transactions-table-body">
@@ -215,12 +229,10 @@
           </button>
         </div>
 
-        <!-- Monthly Analysis Summary Row -->
         <div id="category-summary-cards" class="cat-analysis-grid">
           <!-- Rendered by JS -->
         </div>
 
-        <!-- Budget Progress Cards -->
         <div id="budget-cards-container" class="budget-cards-grid">
           <!-- Rendered by JS -->
         </div>
@@ -232,7 +244,6 @@
          =================================================================== -->
     <main id="tab-charts" class="tab-content">
       <div class="charts-grid">
-        <!-- Daily Trend Line Chart -->
         <div class="section-card chart-card">
           <div class="chart-header">
             <h3><i class="fa-solid fa-chart-line"></i> 每日花費趨勢圖</h3>
@@ -243,7 +254,6 @@
           </div>
         </div>
 
-        <!-- Fixed vs Variable Comparison Bar Chart -->
         <div class="section-card chart-card">
           <div class="chart-header">
             <h3><i class="fa-solid fa-chart-column"></i> 固定支出 vs 變動支出</h3>
@@ -254,7 +264,6 @@
           </div>
         </div>
 
-        <!-- Category Donut Chart -->
         <div class="section-card chart-card">
           <div class="chart-header">
             <h3><i class="fa-solid fa-chart-pie"></i> 各支出類別佔比分析</h3>
@@ -290,13 +299,26 @@
 
         <section class="section-card">
           <div class="section-header">
+            <h2><i class="fa-solid fa-trash-arrow-up"></i> 資料重置與快速整理</h2>
+            <p>快速還原初始極簡4筆範例資料，或一鍵清空所有帳目</p>
+          </div>
+          <div class="settings-action-row">
+            <button id="btn-reset-demo" class="btn btn-outline">
+              <i class="fa-solid fa-rotate-left"></i> 重置為精簡 4 筆範例資料
+            </button>
+            <button id="btn-clear-all" class="btn btn-danger-sm">
+              <i class="fa-solid fa-trash"></i> 清空所有記帳紀錄
+            </button>
+          </div>
+        </section>
+
+        <section class="section-card">
+          <div class="section-header">
             <h2><i class="fa-solid fa-sliders"></i> 各類別預算額度設定</h2>
             <p>自訂每月各項花費上限金額</p>
           </div>
           <form id="form-settings-budgets">
-            <div id="settings-budget-list" class="budget-inputs-list">
-              <!-- Dynamically populated -->
-            </div>
+            <div id="settings-budget-list" class="budget-inputs-list"></div>
             <div style="margin-top: 16px;">
               <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> 儲存預算設定</button>
             </div>
@@ -311,7 +333,7 @@
     </footer>
   </div>
 
-  <!-- Mobile Bottom Navigation Bar (手機版底部導覽列) -->
+  <!-- Mobile Bottom Nav -->
   <nav class="mobile-nav">
     <button class="mobile-nav-btn active" data-tab="tab-dashboard">
       <i class="fa-solid fa-feather"></i>
