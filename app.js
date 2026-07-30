@@ -268,7 +268,7 @@ function renderCategoryAnalysisTab() {
   cardsContainer.innerHTML = html;
 }
 
-// --- 3. Transactions Table Rendering with Batch Select & Intuitive Pills ---
+// --- 3. Transactions Table Rendering ---
 function renderTransactionsTable() {
   const tbody = document.getElementById('transactions-table-body');
   const countBadge = document.getElementById('transaction-count-badge');
@@ -358,7 +358,6 @@ function renderTransactionsTable() {
 
   tbody.innerHTML = html;
 
-  // Add Checkbox event listeners
   document.querySelectorAll('.chk-select-tx').forEach(chk => {
     chk.addEventListener('change', (e) => {
       const id = e.target.dataset.id;
@@ -747,7 +746,7 @@ function importCSV(file) {
   reader.readAsText(file);
 }
 
-// --- 8. Event Listeners & Batch Delete ---
+// --- 8. Event Listeners ---
 function setupEventListeners() {
   document.getElementById('btn-ai-parse').addEventListener('click', handleAiParse);
   document.querySelectorAll('.chip').forEach(chip => {
@@ -761,20 +760,16 @@ function setupEventListeners() {
   document.getElementById('filter-type').addEventListener('change', renderTransactionsTable);
   document.getElementById('filter-category').addEventListener('change', renderTransactionsTable);
 
-  // Checkbox Select All
   const chkSelectAll = document.getElementById('chk-select-all');
   if (chkSelectAll) {
     chkSelectAll.addEventListener('change', (e) => {
       const isChecked = e.target.checked;
       selectedTxIds.clear();
-      if (isChecked) {
-        transactions.forEach(t => selectedTxIds.add(t.id));
-      }
+      if (isChecked) transactions.forEach(t => selectedTxIds.add(t.id));
       renderTransactionsTable();
     });
   }
 
-  // Batch Delete
   const btnBatchDelete = document.getElementById('btn-batch-delete');
   if (btnBatchDelete) {
     btnBatchDelete.addEventListener('click', () => {
@@ -788,28 +783,16 @@ function setupEventListeners() {
     });
   }
 
-  // Reset Demo Data Button
-  const btnResetDemo = document.getElementById('btn-reset-demo');
-  if (btnResetDemo) {
-    btnResetDemo.addEventListener('click', () => {
-      if (confirm('確定要將帳目重置為精簡的 4 筆範例資料嗎？現有資料將會被覆蓋。')) {
-        transactions = JSON.parse(JSON.stringify(INITIAL_TRANSACTIONS));
-        selectedTxIds.clear();
-        renderApp();
-        alert('✅ 已成功重置為精簡 4 筆範例資料！');
-      }
-    });
-  }
-
-  // Clear All Data Button
+  // Clear All Data Button at Bottom Danger Zone
   const btnClearAll = document.getElementById('btn-clear-all');
   if (btnClearAll) {
     btnClearAll.addEventListener('click', () => {
-      if (confirm('⚠️ 警告：確定要清空所有記帳紀錄嗎？此動作無法復原。')) {
+      if (confirm('⚠️ 確定要清空所有記帳紀錄嗎？此動作無法復原。')) {
         transactions = [];
         selectedTxIds.clear();
+        if (chkSelectAll) chkSelectAll.checked = false;
         renderApp();
-        alert('已清空所有帳目紀錄！');
+        alert('✅ 已清空所有記帳紀錄！');
       }
     });
   }
@@ -847,13 +830,8 @@ function setupEventListeners() {
   setupInvoiceScanner();
 }
 
-function openModal(id) {
-  document.getElementById(id).classList.add('active');
-}
-
-function closeModals() {
-  document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
-}
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModals() { document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); }
 
 function openManualModal(editId = null) {
   const form = document.getElementById('form-transaction');
