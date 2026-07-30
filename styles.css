@@ -887,6 +887,22 @@ form {
 .ocr-result-box { background-color: var(--income-bg); border: 1px solid var(--income-border); border-radius: var(--radius-md); padding: 14px; margin-top: 12px; }
 .ocr-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; font-size: 0.85rem; }
 
+.btn-chip {
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 2px 10px;
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-chip:hover {
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
 .app-footer { text-align: center; font-size: 0.78rem; color: var(--text-muted); margin-top: 20px; }
 
 @media (max-width: 768px) {

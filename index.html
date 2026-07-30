@@ -458,15 +458,30 @@
           </div>
         </div>
 
+        <div style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed #cad8d0;">
+          <label for="ocr-paste-input" style="font-size: 0.8rem; font-weight: 600; color: #5c6b64; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+            <i class="fa-solid fa-paste"></i> 或直接貼上載具文字 / 消費通知快速帶入：
+          </label>
+          <input type="text" id="ocr-paste-input" placeholder="例如：全聯福利中心 7/30 消費 480元 LINE Pay" style="width: 100%; padding: 8px 12px; font-size: 0.85rem; border: 1px solid #cad8d0; border-radius: 6px; background-color: #f7f9f8;">
+        </div>
+
         <div id="ocr-result-box" class="ocr-result-box" style="display: none;">
           <div class="result-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <h4 style="margin: 0; font-size: 0.95rem;"><i class="fa-solid fa-circle-check" style="color: #4a6b5d;"></i> 辨識完成！請核對並可隨時修改：</h4>
+            <h4 style="margin: 0; font-size: 0.95rem;"><i class="fa-solid fa-circle-check" style="color: #4a6b5d;"></i> 發票辨識資料（可隨時修改）：</h4>
             <span id="ocr-method-badge" class="badge badge-success" style="font-size: 0.75rem;">QR Code 辨識</span>
           </div>
           <div class="ocr-fields-edit" style="display: flex; flex-direction: column; gap: 10px;">
             <div class="form-group" style="margin: 0;">
               <label for="ocr-merchant-input" style="font-size: 0.8rem; font-weight: 600; color: #5c6b64;">商家 / 描述</label>
               <input type="text" id="ocr-merchant-input" style="padding: 8px 12px; font-size: 0.88rem; border: 1px solid #cad8d0; border-radius: 6px;">
+              <div class="quick-merchant-chips" style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px;">
+                <button type="button" class="btn-chip" onclick="setOcrMerchant('7-ELEVEN 統一超商', '餐飲')">7-11</button>
+                <button type="button" class="btn-chip" onclick="setOcrMerchant('全家便利商店', '餐飲')">全家</button>
+                <button type="button" class="btn-chip" onclick="setOcrMerchant('全聯福利中心', '日常用品')">全聯</button>
+                <button type="button" class="btn-chip" onclick="setOcrMerchant('Uber / 計程車', '交通')">Uber</button>
+                <button type="button" class="btn-chip" onclick="setOcrMerchant('加油站', '交通')">加油</button>
+                <button type="button" class="btn-chip" onclick="setOcrMerchant('麥當勞', '餐飲')">麥當勞</button>
+              </div>
             </div>
             <div class="form-row" style="margin: 0; gap: 10px;">
               <div class="form-group" style="margin: 0;">
@@ -476,6 +491,12 @@
               <div class="form-group" style="margin: 0;">
                 <label for="ocr-amount-input" style="font-size: 0.8rem; font-weight: 600; color: #5c6b64;">總金額 (NT$)</label>
                 <input type="number" id="ocr-amount-input" min="0" step="1" style="padding: 8px 12px; font-size: 0.88rem; border: 1px solid #cad8d0; border-radius: 6px;">
+                <div class="quick-amount-chips" style="display: flex; gap: 6px; margin-top: 4px;">
+                  <button type="button" class="btn-chip" onclick="addOcrAmount(50)">+50</button>
+                  <button type="button" class="btn-chip" onclick="addOcrAmount(100)">+100</button>
+                  <button type="button" class="btn-chip" onclick="addOcrAmount(200)">+200</button>
+                  <button type="button" class="btn-chip" onclick="addOcrAmount(500)">+500</button>
+                </div>
               </div>
             </div>
             <div class="form-row" style="margin: 0; gap: 10px;">

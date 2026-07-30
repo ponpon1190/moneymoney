@@ -605,20 +605,65 @@ function parseNaturalLanguageText(text) {
   return results;
 }
 
+function setOcrMerchant(name, category) {
+  const mInput = document.getElementById('ocr-merchant-input');
+  const cSelect = document.getElementById('ocr-category-select');
+  if (mInput) mInput.value = name;
+  if (cSelect && category) cSelect.value = category;
+}
+
+function addOcrAmount(val) {
+  const aInput = document.getElementById('ocr-amount-input');
+  if (aInput) {
+    const curr = Number(aInput.value) || 0;
+    aInput.value = curr + val;
+  }
+}
+
 // --- 6. Invoice & Receipt Real Scanner (QR Code + OCR) ---
 function setupInvoiceScanner() {
   const dropZone = document.getElementById('drop-zone');
   const fileInput = document.getElementById('file-invoice');
+  const pasteInput = document.getElementById('ocr-paste-input');
 
-  if (!dropZone || !fileInput) return;
+  if (dropZone && fileInput) {
+    dropZone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        processInvoiceFile(e.target.files[0]);
+      }
+    });
+  }
 
-  dropZone.addEventListener('click', () => fileInput.click());
+  if (pasteInput) {
+    pasteInput.addEventListener('input', (e) => {
+      const text = e.target.value.trim();
+      if (!text) return;
+      const parsed = parseNaturalLanguageText(text);
+      if (parsed.length > 0) {
+        const item = parsed[0];
+        const mInput = document.getElementById('ocr-merchant-input');
+        const aInput = document.getElementById('ocr-amount-input');
+        const cSelect = document.getElementById('ocr-category-select');
+        const pSelect = document.getElementById('ocr-payment-select');
+        const ocrBox = document.getElementById('ocr-result-box');
+        const btnConfirm = document.getElementById('btn-confirm-ocr');
+        const methodBadge = document.getElementById('ocr-method-badge');
 
-  fileInput.addEventListener('change', (e) => {
-    if (e.target.files.length > 0) {
-      processInvoiceFile(e.target.files[0]);
-    }
-  });
+        if (mInput) mInput.value = item.description;
+        if (aInput) aInput.value = item.amount;
+        if (cSelect) cSelect.value = item.category;
+        if (pSelect) pSelect.value = item.payment;
+
+        if (ocrBox) ocrBox.style.display = 'block';
+        if (btnConfirm) btnConfirm.style.display = 'inline-flex';
+        if (methodBadge) {
+          methodBadge.textContent = '📋 文字速貼解析';
+          methodBadge.className = 'badge badge-success';
+        }
+      }
+    });
+  }
 
   const btnConfirm = document.getElementById('btn-confirm-ocr');
   if (btnConfirm) {
