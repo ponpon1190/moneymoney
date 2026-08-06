@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taipei Campus BELONG 活動營運與 Salesforce CRM 自動化 SOP</title>
+  
+  <!-- Google Fonts & Mermaid.js -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  
+  <style>
+    :root {
+      --primary: #2b4c7e;
+      --primary-light: #eef3f9;
+      --secondary: #4a7c59;
+      --text: #2d3748;
+      --text-muted: #718096;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --accent: #d97706;
+    }
+
+    body {
+      font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text);
+      background-color: var(--bg);
+      line-height: 1.7;
+      margin: 0;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      padding: 50px 60px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border: 1px solid var(--border);
+    }
+
+    header {
+      border-bottom: 2px solid var(--primary-light);
+      padding-bottom: 25px;
+      margin-bottom: 35px;
+    }
+
+    h1 {
+      color: var(--primary);
+      font-size: 1.85rem;
+      margin-top: 0;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      background: var(--primary-light);
+      padding: 16px 20px;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      margin-top: 20px;
+    }
+
+    .meta-item strong {
+      color: var(--primary);
+    }
+
+    h2 {
+      color: var(--primary);
+      font-size: 1.35rem;
+      border-left: 4px solid var(--primary);
+      padding-left: 12px;
+      margin-top: 40px;
+      margin-bottom: 20px;
+    }
+
+    h3 {
+      color: var(--secondary);
+      font-size: 1.1rem;
+      margin-top: 25px;
+      margin-bottom: 12px;
+    }
+
+    p, li {
+      font-size: 0.98rem;
+    }
+
+    ul, ol {
+      padding-left: 22px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    /* Table Styles */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 0.92rem;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      border: 1px solid var(--border);
+      text-align: left;
+    }
+
+    th {
+      background-color: var(--primary-light);
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    tr:nth-child(even) {
+      background-color: #fafbfd;
+    }
+
+    /* Mermaid Center Container */
+    .mermaid-box {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 25px;
+      margin: 25px 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Action Buttons for Printing */
+    .no-print {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: #1d355a;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: #64748b;
+    }
+
+    .btn-secondary:hover {
+      background: #475569;
+    }
+
+    /* Badge & Alert */
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    /* Print Optimization */
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      .container {
+        box-shadow: none;
+        border: none;
+        padding: 0;
+        max-width: 100%;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <div class="no-print">
+      <button class="btn" onclick="window.print()">🖨️ 列印 / 另存為 PDF</button>
+    </div>
+
+    <header>
+      <h1>📋 Taipei Campus BELONG 活動營運與 CRM 自動化 SOP</h1>
+      <div class="meta-grid">
+        <div class="meta-item"><strong>活動名稱：</strong>Taipei Campus BELONG</div>
+        <div class="meta-item"><strong>參與上限：</strong>48 人</div>
+        <div class="meta-item"><strong>主辦團隊：</strong>Church Life & Operation</div>
+        <div class="meta-item"><strong>主要系統：</strong>Salesforce CRM / SMS / Email</div>
+      </div>
+    </header>
+
+    <h2>🎯 流程優化四大核心目標</h2>
+    <ul>
+      <li><strong>零人工查信：</strong>改用 Salesforce 一鍵 RSVP 按鈕，會眾點擊後系統自動寫入出席狀態。</li>
+      <li><strong>自動化備案：</strong>針對未開信者自動觸發 SMS 簡訊提醒，人工電話負擔降低 70%+。</li>
+      <li><strong>智慧小組媒合：</strong>Salesforce Flow 依「可聚會時間」自動比對並指派對應區長與臨時小組。</li>
+      <li><strong>數據化留存追蹤：</strong>區長直接於 CRM 打卡，系統自動生成第 1 週與第 2 週留存率儀表板。</li>
+    </ul>
+
+    <h2>📅 活動自動化流程圖 (Automated Timeline)</h2>
+    <div class="mermaid-box">
+      <pre class="mermaid">
+flowchart TD
+    A[D-14: 發送第一階段錄取信件<br/>含 RSVP 一鍵按鈕] --> B{48小時內是否點擊？}
+    B -- 是: 確認出席 --> C[Salesforce 狀態改為 Confirmed<br/>觸發小組自動媒合]
+    B -- 否: 未回應 --> D[D-12: 自動發送 SMS 簡訊提醒]
+    D --> E{D-11: 是否確認？}
+    E -- 否 --> F[下一步團隊電話追蹤]
+    E -- 確認/釋出名額 --> G[D-11: 發送第二階段遞補信件]
+    C --> H[D-3: 自動產出區長專屬名單報告]
+    G --> H
+    H --> I[D-2: 發送行前提醒信件 & 簡訊]
+    I --> J[D-0: BELONG 活動當天現場報到]
+    J --> K[D+7 & D+14: 區長 CRM 打卡 & 留存儀表板更新]
+      </pre>
+    </div>
+
+    <h2>📝 詳細階段作業說明</h2>
+
+    <h3>階段一：活動前預備 (活動當天與結束當天)</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>步驟</th>
+          <th>權責單位</th>
+          <th>作業項目</th>
+          <th>Salesforce CRM 自動化機制</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1.1</td>
+          <td>Church Life</td>
+          <td>建立下一次 BELONG 活動 CRM 報名頁面與 QR Code</td>
+          <td>自動啟用報名表單，確保溝通語言與欄位正確。</td>
+        </tr>
+        <tr>
+          <td>1.2</td>
+          <td>Church Life</td>
+          <td>LINE@ 近期活動設定表</td>
+          <td>更新專屬 QR Code 選單連結。</td>
+        </tr>
+        <tr>
+          <td>1.3</td>
+          <td>IT / Church Life</td>
+          <td>設置 Salesforce 自動配對規則</td>
+          <td>確認區長小組聚會時間與容納人數資料無誤。</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>階段二：雙階段通知與出席確認 (D-14 ~ D-5)</h3>
+    <ul>
+      <li><strong>第一階段通知 (D-14 / 8/30 09:00 AM)：</strong>發送帶有 RSVP 按鈕之 Email。<span class="badge">一鍵自動更新</span></li>
+      <li><strong>自動化簡訊備案 (D-12 / 9/1 10:00 AM)：</strong>針對 48 小時內未回覆者自動發送 SMS 提醒簡訊。</li>
+      <li><strong>電話追蹤與第二階段遞補 (D-11 / 9/2 早上)：</strong>下一步團隊於 CRM 界面查看未確認名單進行撥打。下午 2:00 PM 發送第二階段遞補信。</li>
+      <li><strong>釋出名額通知 (D-5 / 9/8 10:30 AM)：</strong>未確認者自動發送名額釋出與預約下期通知。</li>
+    </ul>
+
+    <h3>階段三：小組自動媒合與行前通知 (D-3 ~ D-2)</h3>
+    <ul>
+      <li><strong>Salesforce 小組自動配對 (D-3 / 9/10)：</strong>以「可聚會時間」為第一優先比對，自動分配區長臨時小組並生成區長名單報告。</li>
+      <li><strong>行前通知 (D-2 / 9/11 10:30 AM)：</strong>Email + SMS 發送行前提醒（報到時間 3:45 PM - 4:00 PM，地點 1F 副堂）。</li>
+    </ul>
+
+    <h3>階段四：活動當天與留存追蹤 (D-0 ~ D+14)</h3>
+    <ul>
+      <li><strong>現場報到 (D-0 / 9/13)：</strong>iPad 掃 Code 快速報到並指派至專屬桌位。</li>
+      <li><strong>留存追蹤 (D+7 & D+14)：</strong>區長於聚會後在 Salesforce 進行點名，即時匯入 Retention Dashboard。</li>
+    </ul>
+
+    <h2>🛠️ 給 IT 團隊的 Salesforce 技術需求規格</h2>
+    <ol>
+      <li><strong>RSVP Web Hook / Flow Builder：</strong>設定加密動態 URL 帶入 `Registration_ID`，點擊即寫入 `Status` 欄位。</li>
+      <li><strong>SMS 簡訊 API 串接：</strong>整合簡訊平台 API 至 Salesforce Flow 觸發提醒。</li>
+      <li><strong>Auto-Matching Flow 邏輯：</strong>`Available_Time__c == Group.Meeting_Time__c` 自動關聯對應區長與 Campaign。</li>
+      <li><strong>儀表板權限設定：</strong>開放區長名單視角與 Church Life 專用留存率 Dashboard。</li>
+    </ol>
+
+  </div>
+
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'neutral',
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis'
+      }
+    });
+  </script>
+</body>
+</html>
