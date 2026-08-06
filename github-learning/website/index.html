@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GitHub & Git 文青實證互動學習誌 (GitHub Learning)</title>
-  <meta name="description" content="典雅文青風格、具備三層官方權威證據鏈與實作驗證模式 (Verify Mode) 的 Git / GitHub 雙軌互動學習網站。">
+  <meta name="description" content="典雅文青風格、全景學習流程圖、具備三層官方權威證據鏈、新手迷航導航、Gemini AI 隨身助教與實作驗證模式 (Verify Mode) 的 Git / GitHub 雙軌互動學習網站。">
   <!-- Google Fonts: 繁體中文文青書寫 (Noto Serif TC + Noto Sans TC + Fira Code) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,7 +21,7 @@
           <span class="brand-icon">🖋️</span>
           <div>
             <div class="brand-title">Git 實證學習誌</div>
-            <span class="badge-official">Literary & Official</span>
+            <span class="badge-official">Literary & Gemini AI</span>
           </div>
         </div>
       </div>
@@ -52,12 +52,9 @@
         </div>
 
         <div class="header-actions">
-          <button class="btn-icon" id="theme-toggle-btn" title="切換文青暖日 / 墨夜主題" aria-label="切換主題">
-            ☀️
+          <button class="btn-secondary" onclick="window.roadmapEngine.toggle(true)" style="padding: 8px 18px; font-size: 0.85rem; font-family: var(--font-heading);">
+            🗺️ 學習流程圖
           </button>
-          <a href="../docs/curriculum.md" class="btn-secondary" style="padding: 8px 16px; font-size: 0.85rem;" target="_blank">
-            📜 課程大綱
-          </a>
         </div>
       </header>
 
@@ -73,6 +70,8 @@
   <script src="./js/progress.js"></script>
   <script src="./js/verify.js"></script>
   <script src="./js/quiz.js"></script>
+  <script src="./js/roadmap.js"></script>
+  <script src="./js/gemini-tutor.js"></script>
   <script src="./js/app.js"></script>
 </body>
 </html>

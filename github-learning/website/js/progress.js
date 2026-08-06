@@ -85,7 +85,7 @@ class ProgressManager {
   }
 
   getTheme() {
-    return localStorage.getItem(this.THEME_KEY) || 'dark';
+    return localStorage.getItem(this.THEME_KEY) || 'light';
   }
 
   setTheme(theme) {

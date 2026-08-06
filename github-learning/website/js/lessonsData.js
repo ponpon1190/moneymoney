@@ -1,5 +1,5 @@
 /**
- * Lessons Database JS Bundle (All 24 Lessons Complete)
+ * Lessons Database JS Bundle (24 Lessons with Custom Compass Steps for Every Lesson)
  */
 window.lessonsData = [
   {
@@ -16,6 +16,14 @@ window.lessonsData = [
     "prerequisites": [
       "基本的電腦檔案管理與目錄導覽經驗"
     ],
+    "compass": {
+      "title": "🧭 Lesson 01 專屬新手實作指南",
+      "steps": [
+        "開啟工具：開啟 GitHub Desktop 應用程式，或打開 Terminal / PowerShell 終端機窗口。",
+        "完成身分設定：前往 Desktop 的 Preferences -> Git 頁籤，或在終端機輸入 git config --global user.name \"你的名字\"。",
+        "驗證成果：在終端機執行 git config --list，確認 user.name 與 user.email 是否正確顯示。"
+      ]
+    },
     "mentalModel": {
       "analogy": "把 Git 想像成一台安裝在本地電腦的『時間機器與備份相機』，每當你拍攝一張快照，它就能紀錄當時所有檔案的精確狀態；而 GitHub 則像是一個『雲端展演中心與合作社』，你可以把本地的時間機器紀錄傳送上去，讓全世界或團隊成員一起檢視、討論與協作。",
       "keyTakeaway": "Git 可以在完全沒有網路的環境下於本地獨自運作；GitHub 則需要網路連結才能進行雲端同步與團隊協作。"
@@ -55,7 +63,7 @@ window.lessonsData = [
         "title": "GitHub Desktop 初次配置與視窗導覽",
         "steps": [
           "下載並安裝 GitHub Desktop (desktop.github.com)。",
-          "開啟應用程式，點擊主選單的 File -> Options (Windows) 或 GitHub Desktop -> Preferences (Mac)。",
+          "開啟應用程式，點擊主選單 File -> Options (Windows) 或 GitHub Desktop -> Preferences (Mac)。",
           "在 Accounts 頁籤登入你的 GitHub 帳號。",
           "在 Git 頁籤確認 Name 與 Email 是否與 GitHub 帳號綁定。"
         ],
@@ -117,6 +125,14 @@ window.lessonsData = [
     "prerequisites": [
       "Lesson 01：完成 Git 初始化設定"
     ],
+    "compass": {
+      "title": "🧭 Lesson 02 專屬新手實作指南",
+      "steps": [
+        "建立儲存庫：在 Desktop 點擊 File > New Repository，或在 Terminal 輸入 mkdir my-first-repo。",
+        "執行初始化：為專案命名為 my-first-repo，並確認勾選 Initialize with a README（或執行 git init）。",
+        "檢視隱藏保險箱：在檔案總管開啟顯示隱藏檔案，確認專案目錄內是否出現隱藏的 .git 資料夾。"
+      ]
+    },
     "mentalModel": {
       "analogy": "儲存庫 (Repository) 就像是專案的『保險箱專屬資料夾』。一旦你將一般資料夾『初始化』為 Repository，Git 就會在裡面悄悄放置一個隱藏的 .git 保險箱核心，開始精確記錄這個資料夾內每一秒的任何檔案變動。",
       "keyTakeaway": "千萬不可以手動刪除或隨意修改 .git 隱藏資料夾，那是儲存整個專案歷史資料庫的核心精髓！"
@@ -204,6 +220,14 @@ window.lessonsData = [
     "prerequisites": [
       "Lesson 02：已建立 Repository"
     ],
+    "compass": {
+      "title": "🧭 Lesson 03 專屬新手實作指南",
+      "steps": [
+        "建立新檔案：在 my-first-repo 資料夾內新建一個名為 README.md 的文字檔並隨意輸入文字。",
+        "觀察與暫存：開啟 Desktop 觀察 Changes 面板（或在 Terminal 輸入 git status），勾選檔案進行暫存 (Staging)。",
+        "拍攝快照：在摘要欄輸入 Add README.md，點擊 Commit 按鈕（或 CLI 輸入 git commit -m \"...\"）。"
+      ]
+    },
     "mentalModel": {
       "analogy": "工作區 = 你的寫字檯；暫存區 = 挑選禮物放入寄送禮盒中；Commit = 封箱貼上快遞單並拍下永久快照照片。",
       "keyTakeaway": "Commit 是 Git 的最基本歷史單位，每一個 Commit 都包含唯一的 SHA-1 Hash 雜湊值與變更紀錄。"
@@ -290,6 +314,14 @@ window.lessonsData = [
     "prerequisites": [
       "Lesson 03"
     ],
+    "compass": {
+      "title": "🧭 Lesson 04 專屬新手實作指南",
+      "steps": [
+        "進行多次修訂：對 README.md 進行第二次修改並再次 Commit。",
+        "檢視歷史相簿：在 Desktop 點擊 History 頁籤（或 Terminal 輸入 git log --oneline）。",
+        "識別顏色差異：點選特定的 Commit 快照，觀察右側綠色 (+) 代表新增、紅色 (-) 代表刪除的對照。"
+      ]
+    },
     "mentalModel": {
       "analogy": "git log 就像是開起相簿檢視過往所有拍下的照片紀錄；git diff 則像是開啟『比對鏡頭』，精確標示出前後兩張照片中哪裡增加了線條，哪裡抹去了文字。",
       "keyTakeaway": "綠色代表新增 (+)，紅色代表刪除 (-)。"
@@ -374,6 +406,14 @@ window.lessonsData = [
     "prerequisites": [
       "Lesson 03"
     ],
+    "compass": {
+      "title": "🧭 Lesson 05 專屬新手實作指南",
+      "steps": [
+        "建立敏感檔案：在專案根目錄新建名為 .env 的檔案並輸入資料庫密碼。",
+        "設置忽略門神：新建名為 .gitignore 的文字檔，在第一行寫入 .env 並存檔。",
+        "確認效果：切換回 Desktop 或在 CLI 輸入 git status，確認 .env 不再出現在未暫存清單中。"
+      ]
+    },
     "mentalModel": {
       "analogy": ".gitignore 就像是專案門口貼的『禁止入內告示牌』。它告訴 Git 哪些檔案是私人密碼、系統暫存檔或大型編譯結果，完全忽視它們的存在。",
       "keyTakeaway": ".gitignore 只對未曾被追蹤 (Untracked) 的檔案生效。"
@@ -457,6 +497,14 @@ window.lessonsData = [
     "prerequisites": [
       "Lesson 03"
     ],
+    "compass": {
+      "title": "🧭 Lesson 06 專屬新手實作指南",
+      "steps": [
+        "模擬寫錯內容：在 README.md 故意輸入一串亂碼並儲存。",
+        "執行復原：在 Desktop 右鍵點擊該檔案選擇 Discard Changes（或 CLI 輸入 git restore README.md）。",
+        "確認還原：打開檔案確認亂碼已消失，檔案回復到上一張 Commit 快照的狀態。"
+      ]
+    },
     "mentalModel": {
       "analogy": "Undo 就像是按下 ctrl+z 復原剛才打錯的字；Restore 是將桌面還原回上一張快照的模樣。",
       "keyTakeaway": "未 commit 的修訂一旦強行 discard 就無法救回，操作前務必謹慎。"
@@ -540,6 +588,14 @@ window.lessonsData = [
     "prerequisites": [
       "Lesson 03"
     ],
+    "compass": {
+      "title": "🧭 Lesson 07 專屬新手實作指南",
+      "steps": [
+        "發布專案：在 Desktop 點擊 Publish repository 藍色按鈕（或 CLI 輸入 git remote add origin URL）。",
+        "推送快照：選擇 Publish 至 GitHub 雲端並設為 Public 公開。",
+        "線上驗證：打開瀏覽器登入 GitHub 網站，造訪你的 Repo 頁面，確認是否已能看到上傳的 Commit。"
+      ]
+    },
     "mentalModel": {
       "analogy": "Push 就像是將你本地照片庫同步上傳到 GitHub 雲端相簿。讓遠端伺服器備份你的每一次 commit 快照。",
       "keyTakeaway": "Push 傳送的是 Commit 歷史物件，而非單純的檔案檔案覆蓋。"
@@ -623,6 +679,14 @@ window.lessonsData = [
     "prerequisites": [
       "Lesson 01"
     ],
+    "compass": {
+      "title": "🧭 Lesson 08 專屬新手實作指南",
+      "steps": [
+        "獲取 URL：在 GitHub 網站任意公開 Repo 頁面點擊 Code 綠色按鈕複製 HTTPS 網址。",
+        "複製專案：在 Desktop 點擊 File > Clone Repository 貼上網址（或 CLI 執行 git clone URL）。",
+        "檢查目錄：開啟 Clone 下來的資料夾，確認裡面帶有完整的修訂歷史與 .git 核心。"
+      ]
+    },
     "mentalModel": {
       "analogy": "Download ZIP 只是下載了一張當前檔案的『快照印刷單張』（沒有 .git）；Clone 則是將全套『歷史時間機器』整台複製到你的電腦中。",
       "keyTakeaway": "Clone 後的專案包含完整修訂歷史，可以直接進行 commit 與 push 操作。"
@@ -706,6 +770,14 @@ window.lessonsData = [
     "prerequisites": [
       "Lesson 07"
     ],
+    "compass": {
+      "title": "🧭 Lesson 09 專屬新手實作指南",
+      "steps": [
+        "網頁版修改：在 GitHub 網站直接線上編輯 README.md 並 Commit（模擬隊友修改）。",
+        "本地檢查：回到 Desktop 點擊 Fetch origin，按鈕會提示 1 commit behind（落後一個提交）。",
+        "拉取合併：點擊 Pull origin 鈕，將雲端最新修訂拉取並自動合併到本地！"
+      ]
+    },
     "mentalModel": {
       "analogy": "Fetch 像是查看快遞追蹤簡訊通知（知道了有新包裹但尚未拆封）；Pull 則是收下包裹並直接拆開裝入你的房間（Fetch + Merge）。",
       "keyTakeaway": "git pull = git fetch + git merge"
@@ -789,6 +861,14 @@ window.lessonsData = [
     "prerequisites": [
       "Lesson 03"
     ],
+    "compass": {
+      "title": "🧭 Lesson 10 專屬新手實作指南",
+      "steps": [
+        "建立平行分支：在 Desktop 點擊 Current Branch -> New Branch，命名為 feature/login。",
+        "在分支上修改：切換至 feature/login，新增一個 test.txt 檔並 Commit。",
+        "切換觀察：切換回 main 分支，你會發現 test.txt 檔消失了！這就是平行宇宙的威力。"
+      ]
+    },
     "mentalModel": {
       "analogy": "分支就像是平行宇宙的實驗室。你在新分支隨意嘗試開發新功能，完全不會影響主宇宙 (main) 的穩定運作。",
       "keyTakeaway": "Git 的分支非常輕量，本質只是一個指向 40 字元 SHA-1 Commit 的 41 位元組檔案指標！"
@@ -874,6 +954,14 @@ window.lessonsData = [
     "prerequisites": [
       "Lesson 10"
     ],
+    "compass": {
+      "title": "🧭 Lesson 11 專屬新手實作指南",
+      "steps": [
+        "站穩目標分支：在 Desktop 確保 Current Branch 切換回 main 分支。",
+        "執行合併：點擊選單 Branch > Merge into current branch，選擇 feature/login。",
+        "清理舊分支：合併成功後，在 Current Branch 選單中右鍵刪除已完成使命的 feature/login。"
+      ]
+    },
     "mentalModel": {
       "analogy": "Merge 就像是將平行宇宙在測試成熟後的最新技術，正式裝配與回歸到主宇宙主航線上。",
       "keyTakeaway": "先切換到接收變更的目标分支 (如 main)，再執行 merge 來源分支。"
@@ -958,6 +1046,14 @@ window.lessonsData = [
     "prerequisites": [
       "Lesson 11"
     ],
+    "compass": {
+      "title": "🧭 Lesson 12 專屬新手實作指南",
+      "steps": [
+        "製造人工衝突：在 main 和 feature 兩分支分別修改同一個檔案同一行並 Commit。",
+        "觸發與開啟：站在 main 執行 merge feature，桌面會彈出 Conflicts 提示，點擊 Open in VS Code。",
+        "清理標記與提交：選擇保留正確內容，刪除 <<<, ===, >>> 標記，儲存後在 Desktop 點擊 Continue Merge。"
+      ]
+    },
     "mentalModel": {
       "analogy": "衝突就像是兩位作者同時在同一頁同一個段落寫了不同的文字，Git 不敢擅自替你作主刪除任何人的心血，於是舉手請你親自決定要採用哪一個版本。",
       "keyTakeaway": "衝突不是壞事，它是 Git 保障資料安全的保護機制。"
@@ -1044,6 +1140,14 @@ window.lessonsData = [
       "Lesson 07",
       "Lesson 10"
     ],
+    "compass": {
+      "title": "🧭 Lesson 13 專屬新手實作指南",
+      "steps": [
+        "推送功能分支：在 feature 分支上完成 Commit 並點擊 Publish / Push branch 上傳。",
+        "發起 PR：點擊 Desktop 畫面的 Create Pull Request 按鈕，自動開啟 GitHub Web 頁面。",
+        "填寫提案說明：填寫清晰的標題與修改目的，點擊 Create Pull Request 按鈕。"
+      ]
+    },
     "mentalModel": {
       "analogy": "PR 就像是向專案總監遞交一份『企劃與修訂申請書』。你展示你在功能分支上的成果，請團隊夥伴討論與審查，核准後才能進入主線。",
       "keyTakeaway": "PR 是 GitHub 上的線上討論區，而非單純的 command 指令。"
@@ -1128,6 +1232,14 @@ window.lessonsData = [
     "prerequisites": [
       "Lesson 13"
     ],
+    "compass": {
+      "title": "🧭 Lesson 14 專屬新手實作指南",
+      "steps": [
+        "開啟 Files Changed：在 GitHub PR 頁面切換至 Files changed 頁籤。",
+        "進行行內留言：滑鼠懸停在代碼行號點擊 + 號，發起單行討論與建議。",
+        "更新修訂：若收到建議，直接在本地分支補充 Commit 並 Push，PR 頁面會自動更新最新狀態。"
+      ]
+    },
     "mentalModel": {
       "analogy": "Code Review 就像是同儕論文評閱。大家針對特定段落提出優化建議，幫助專案保持高代碼品質與低 Bug 率。",
       "keyTakeaway": "評論針對的是『程式碼與架構』，而非開發者個人。"
@@ -1212,6 +1324,14 @@ window.lessonsData = [
     "prerequisites": [
       "Lesson 13"
     ],
+    "compass": {
+      "title": "🧭 Lesson 15 專屬新手實作指南",
+      "steps": [
+        "選擇 Squash 模式：在 PR 底部綠色按鈕點選下拉選單，選擇 Squash and Merge。",
+        "確認合併：點擊 Confirm 按鈕，將分支上的多個小 Commit 濃縮為單一高層級 Commit。",
+        "刪除遠端分支：合併後點擊 Delete Branch 按鈕，並在 Desktop 點擊 Fetch 進行本地清理。"
+      ]
+    },
     "mentalModel": {
       "analogy": "Squash and merge 就像是將你開發過程中的 10 個草稿碎屑小 commit 打包壓扁成 1 個精美的特刊 commit，保持主分支日誌乾淨俐落。",
       "keyTakeaway": "合併完 PR 後，養成順手刪除 feature 分支的好習慣。"
@@ -1295,6 +1415,14 @@ window.lessonsData = [
     "prerequisites": [
       "Lesson 07"
     ],
+    "compass": {
+      "title": "🧭 Lesson 16 專屬新手實作指南",
+      "steps": [
+        "建立待辦卡片：在 GitHub 頁面點擊 Issues 頁籤，新建一個題為 Fix typo 的 Issue #1。",
+        "寫入關鍵字：在本地修復錯字後，Commit 訊息寫入 Fix typo (Fixes #1)。",
+        "自動化關閉：Push 上雲端後，造訪 Issue #1 頁面，確認狀態已自動變更為 Closed！"
+      ]
+    },
     "mentalModel": {
       "analogy": "Issues 就像是專案看板上的『待辦事項便籤』。大家在那裡提報 bug、討論新功能，並追蹤進度。",
       "keyTakeaway": "在 commit 或 PR 中寫入 `Fixes #Issue編號` 可以觸發自動關閉 Issue！"
@@ -1371,7 +1499,7 @@ window.lessonsData = [
     "id": "lesson-17",
     "number": 17,
     "title": "GitHub Markdown 與 README 專案門面",
-    "module": "模組三：团队協作與 GitHub 生態系",
+    "module": "模組三：團隊協作與 GitHub 生態系",
     "duration": "20 分鐘",
     "objectives": [
       "掌握 GitHub Flavored Markdown (GFM) 的核心語法",
@@ -1380,6 +1508,14 @@ window.lessonsData = [
     "prerequisites": [
       "Lesson 03"
     ],
+    "compass": {
+      "title": "🧭 Lesson 17 專屬新手實作指南",
+      "steps": [
+        "編寫門面：打開 README.md，使用 # 建立標題，使用 - [x] 建立任務清單。",
+        "代碼高亮：使用三個反引號 ```javascript 包裹代碼塊。",
+        "預覽成果：Commit 並 Push，在 GitHub 專案首頁賞析排版完美的門面成果。"
+      ]
+    },
     "mentalModel": {
       "analogy": "README.md 就像是專案的『精裝名片與展示櫥窗』。開宗明義告訴訪客這個專案是什麼、怎麼安裝、如何使用。",
       "keyTakeaway": "好的 README 包含：標題、簡介、安裝步驟、使用說明與授權。"
@@ -1465,6 +1601,14 @@ window.lessonsData = [
       "Lesson 08",
       "Lesson 13"
     ],
+    "compass": {
+      "title": "🧭 Lesson 18 專屬新手實作指南",
+      "steps": [
+        "派生副本：造訪任意開源專案，點擊右上角 Fork 按鈕複製一份到你自己的帳號下。",
+        "修改本地：Clone 你的 Fork 庫，建立 feature 分支完成修改並 Push 到你自己的庫。",
+        "跨庫提案：點擊 Create Pull Request，將 Base 選擇為原作者專案，發起開源貢獻 PR！"
+      ]
+    },
     "mentalModel": {
       "analogy": "Fork 就像是在圖書館影印了一本經典書籍放在你自己的書架上。你可以隨意在上面做筆記，成熟後再把精妙的筆記寫回給原作者 (跨庫 PR)。",
       "keyTakeaway": "Fork 會在你的 GitHub 個人帳號下建立一份擁有完全寫入權限的專案副本。"
@@ -1550,6 +1694,14 @@ window.lessonsData = [
       "Lesson 06",
       "Lesson 10"
     ],
+    "compass": {
+      "title": "🧭 Lesson 19 專屬新手實作指南",
+      "steps": [
+        "寫到一半切換：在工作區修改檔案但不 Commit，嘗試點擊切換其他分支。",
+        "放入抽屜：在彈出的 Stash 彈窗點選 Stashed Changes，使工作區恢復潔淨。",
+        "取回草稿：切回原分支，點擊 Restore Stash（或 CLI 輸入 git stash pop）取回先前修改。"
+      ]
+    },
     "mentalModel": {
       "analogy": "Stash 就像是將寫到一半的草稿紙臨時塞入桌面下的抽屜裡，讓桌面瞬間回復乾淨，等你切換完分支處理完緊急 Bug 後，再從抽屜拿出來繼續寫。",
       "keyTakeaway": "Stash 適用於寫到一半不適合 Commit 但必須立即切換分支的場景。"
@@ -1636,6 +1788,14 @@ window.lessonsData = [
       "Lesson 04",
       "Lesson 10"
     ],
+    "compass": {
+      "title": "🧭 Lesson 20 專屬新手實作指南",
+      "steps": [
+        "獲取 Hash：在來源分支的 History 中複製目標 Commit 的 7 位 SHA Hash 碼。",
+        "切換目標：切換至接收 Commit 的目標分支（如 main）。",
+        "採摘複製：在 Desktop 直接將該 Commit 拖曳至 main（或 CLI 輸入 git cherry-pick SHA）。"
+      ]
+    },
     "mentalModel": {
       "analogy": "Cherry-pick 就像是在櫻桃蛋糕上『單獨採摘其中一顆最甜的櫻桃』。你不想要另一個分支的所有改動，只想要裡面的某一個特定的 Commit。",
       "keyTakeaway": "Cherry-pick 會在當前分支複製並建立一個內容相同但 SHA 雜湊值不同的新 Commit。"
@@ -1722,6 +1882,14 @@ window.lessonsData = [
       "Lesson 10",
       "Lesson 11"
     ],
+    "compass": {
+      "title": "🧭 Lesson 21 專屬新手實作指南",
+      "steps": [
+        "切換 Feature：站在你的個人未公開 feature 分支上。",
+        "選擇新基底：在 Desktop 點擊 Branch > Rebase current branch，選擇 main 作為基底。",
+        "賞析直線歷史：Rebase 完成後開啟 History，觀察 Commit 發展是否成為漂亮的單一直線。"
+      ]
+    },
     "mentalModel": {
       "analogy": "Rebase 就像是把你的功能分支整根抽出來，把它的起點『剪貼接合』到最新 main 分支的末端，讓歷史發展變成一條完美好看的直線。",
       "keyTakeaway": "Rebase 能創造極致乾淨的線性歷史 (Linear History)，但會重新計算 SHA 雜湊值。"
@@ -1808,6 +1976,14 @@ window.lessonsData = [
       "Lesson 06",
       "Lesson 21"
     ],
+    "compass": {
+      "title": "🧭 Lesson 22 專屬新手實作指南",
+      "steps": [
+        "模擬誤刪：人為刪除一個包含重要提交的本地分支。",
+        "開啟黑盒子：在 Terminal 輸入 git reflog，找到被刪除 Commit 的 HEAD@{n} 座標碼。",
+        "完美復原：執行 git checkout -b rescue-branch SHA 碼，成功將失蹤分支完整救回！"
+      ]
+    },
     "mentalModel": {
       "analogy": "Reflog 就像是 Git 系統底層的『黑盒子飛行紀錄器』。不論你如何誤刪分支或執行 reset --hard，只要 Commit 曾經存在過，Reflog 都能找回它的座標。",
       "keyTakeaway": "Git 幾乎不會輕易丟失任何已經 Commit 過的資料！"
@@ -1892,6 +2068,14 @@ window.lessonsData = [
     "prerequisites": [
       "Lesson 07"
     ],
+    "compass": {
+      "title": "🧭 Lesson 23 專屬新手實作指南",
+      "steps": [
+        "標記里程碑：在 Desktop History 選擇最新 Commit，右鍵點擊 Create Tag 輸入 v1.0.0。",
+        "推送標籤：在 Terminal 執行 git push origin v1.0.0 將標籤推送到 GitHub。",
+        "發布 Release：在 GitHub 頁面點擊 Releases > Draft a new release，選擇 v1.0.0 發布！"
+      ]
+    },
     "mentalModel": {
       "analogy": "Tag 就像是里程碑里程碑紀念碑。當你的產品達到重要里程碑（如 1.0.0 正式版上線），你在特定的 Commit 貼上一枚永久標籤與紀念封印。",
       "keyTakeaway": "語意化版本號：v主版本.次版本.修訂版本 (例: v1.0.0)。"
@@ -1978,6 +2162,14 @@ window.lessonsData = [
       "Lesson 07",
       "Lesson 17"
     ],
+    "compass": {
+      "title": "🧭 Lesson 24 專屬新手實作指南",
+      "steps": [
+        "準備首頁：確認專案根目錄含有 index.html 檔並 Push 上雲端。",
+        "開啟部署：造訪 GitHub 專案 Settings > Pages 頁面，Source 選擇 Deploy from a branch (main /root)。",
+        "大功告成：點擊 Save 稍候片刻，開啟獲取的專屬 URL，欣賞你親手部署上線的網頁！"
+      ]
+    },
     "mentalModel": {
       "analogy": "GitHub Pages 就像是 GitHub 免費贈送給你的『全天候個人網頁伺服器』。只要你將網頁程式碼 Push 上傳，GitHub 就能自動幫你發布成全網可造訪的真實網站！",
       "keyTakeaway": "這是驗證並展示你 Git / GitHub 學習成果的最精采終點與起點！"

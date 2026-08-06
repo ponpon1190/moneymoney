@@ -1,38 +1,43 @@
 /* ==========================================================================
-   GitHub Learning Platform - 文青風格設計系統 (Literary & Warm Aesthetic)
+   GitHub Learning Platform - 典雅文青風格 (Literary & Visual Diagram Enhanced)
    ========================================================================== */
 
-/* --- Root Design Tokens (Light Theme Default for Literary Aesthetic) --- */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap');
+
+/* --- 1. 文青暖日模式 (Light Theme Default) --- */
 :root {
-  --font-heading: 'Noto Serif TC', serif;
+  --font-heading: 'Noto Serif TC', 'Songti TC', serif;
   --font-main: 'Noto Sans TC', -apple-system, sans-serif;
   --font-code: 'Fira Code', monospace;
 
-  /* 文青暖日色調 (Warm Cream & Sage Green) */
-  --bg-primary: #faf8f5;
-  --bg-secondary: #fffefb;
-  --bg-tertiary: #f2ede4;
-  --bg-card: rgba(255, 254, 251, 0.95);
-  --bg-glass: rgba(250, 248, 245, 0.9);
+  /* 暖紙調性色盤 */
+  --bg-primary: #faf8f5;        /* 柔軟淡燕麥白 */
+  --bg-secondary: #fffefb;      /* 溫潤紙張白 */
+  --bg-tertiary: #f2ede4;       /* 暖米灰紙背 */
+  --bg-card: rgba(255, 254, 251, 0.98);
+  --bg-glass: rgba(250, 248, 245, 0.92);
 
   --border-color: #e6dfd3;
   --border-highlight: #d4c9b8;
 
-  --text-primary: #2c2825;
-  --text-secondary: #6b635b;
-  --text-muted: #968c81;
+  --text-primary: #2c2825;      /* 深茶墨色 */
+  --text-secondary: #5c554e;    /* 木墨灰 */
+  --text-muted: #968c81;        /* 淡煙灰 */
 
   --accent-sage: #5b7052;       /* 莫蘭迪松針綠 */
-  --accent-sage-hover: #4a5c43;
-  --accent-terracotta: #c05c46; /* 暖赭紅 */
-  --accent-ochre: #c28b38;      /* 復古黃銅 */
+  --accent-sage-hover: #485b40;
+  --accent-terracotta: #c05c46; /* 暖赭紅 Badge */
+  --accent-ochre: #c28b38;      /* 復古黃銅 Badge */
   --accent-blue: #4b6584;       /* 靜謐藍 */
   --accent-purple: #7e6388;     /* 丁香紫 */
+  --accent-gemini: #5b7052;     /* 文青綠 Gemini */
 
-  --gradient-brand: linear-gradient(135deg, #5b7052 0%, #839d79 50%, #c28b38 100%);
+  --gradient-brand: linear-gradient(135deg, #5b7052 0%, #768f6b 50%, #c28b38 100%);
+  --gradient-gemini: linear-gradient(135deg, #5b7052 0%, #839d79 50%, #c28b38 100%);
+
   --shadow-sm: 0 2px 8px rgba(44, 40, 37, 0.04);
-  --shadow-md: 0 8px 24px rgba(44, 40, 37, 0.08);
-  --shadow-glow: 0 0 20px rgba(91, 112, 82, 0.12);
+  --shadow-md: 0 8px 30px rgba(44, 40, 37, 0.06);
+  --shadow-lg: 0 16px 36px rgba(44, 40, 37, 0.12);
 
   --radius-sm: 4px;
   --radius-md: 8px;
@@ -43,35 +48,7 @@
   --transition-normal: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* --- 深色主題 (文青夜墨書房) --- */
-[data-theme="dark"] {
-  --bg-primary: #181715;
-  --bg-secondary: #211f1c;
-  --bg-tertiary: #2b2824;
-  --bg-card: rgba(33, 31, 28, 0.95);
-  --bg-glass: rgba(24, 23, 21, 0.9);
-
-  --border-color: #3d3832;
-  --border-highlight: #544d45;
-
-  --text-primary: #f0ebe1;
-  --text-secondary: #a69e94;
-  --text-muted: #7d756b;
-
-  --accent-sage: #88a37d;
-  --accent-sage-hover: #9bb790;
-  --accent-terracotta: #d97862;
-  --accent-ochre: #d99e43;
-  --accent-blue: #6b89b0;
-  --accent-purple: #9c80a8;
-
-  --gradient-brand: linear-gradient(135deg, #88a37d 0%, #a4bf98 50%, #d99e43 100%);
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
-  --shadow-glow: 0 0 20px rgba(136, 163, 125, 0.15);
-}
-
-/* --- Global Reset & Typography --- */
+/* Base Reset */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -82,13 +59,13 @@ body {
   font-family: var(--font-main);
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  line-height: 1.75;
+  line-height: 1.8;
   overflow-x: hidden;
   min-height: 100vh;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.3px;
 }
 
-h1, h2, h3, h4, .brand-title {
+h1, h2, h3, h4, .brand-title, .section-title, .lesson-title {
   font-family: var(--font-heading);
   letter-spacing: -0.2px;
 }
@@ -104,7 +81,6 @@ a:hover {
   text-decoration: underline;
 }
 
-/* --- Layout --- */
 .app-container {
   display: flex;
   min-height: 100vh;
@@ -122,7 +98,6 @@ a:hover {
   bottom: 0;
   left: 0;
   z-index: 100;
-  transition: transform var(--transition-normal);
 }
 
 .sidebar-header {
@@ -142,7 +117,7 @@ a:hover {
 }
 
 .brand-title {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--text-primary);
 }
@@ -151,7 +126,7 @@ a:hover {
   font-size: 0.68rem;
   font-family: var(--font-main);
   font-weight: 500;
-  padding: 2px 8px;
+  padding: 2px 9px;
   background: rgba(91, 112, 82, 0.1);
   color: var(--accent-sage);
   border: 1px solid rgba(91, 112, 82, 0.25);
@@ -177,12 +152,6 @@ a:hover {
   font-size: 0.85rem;
   font-family: var(--font-main);
   outline: none;
-  transition: border-color var(--transition-fast);
-}
-
-.search-input:focus {
-  border-color: var(--accent-sage);
-  box-shadow: 0 0 0 3px rgba(91, 112, 82, 0.12);
 }
 
 .search-icon {
@@ -194,7 +163,6 @@ a:hover {
   font-size: 0.85rem;
 }
 
-/* Nav Menu */
 .sidebar-nav {
   flex: 1;
   overflow-y: auto;
@@ -203,10 +171,9 @@ a:hover {
 
 .nav-module-title {
   font-family: var(--font-heading);
-  font-size: 0.8rem;
+  font-size: 0.825rem;
   font-weight: 700;
   color: var(--text-muted);
-  letter-spacing: 0.5px;
   padding: 14px 10px 6px 10px;
   border-bottom: 1px solid rgba(0,0,0,0.04);
   margin-bottom: 6px;
@@ -216,7 +183,7 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 9px 12px;
+  padding: 10px 12px;
   border-radius: var(--radius-sm);
   margin-bottom: 3px;
   cursor: pointer;
@@ -235,10 +202,6 @@ a:hover {
   color: var(--accent-sage);
   font-weight: 600;
   border-left: 3px solid var(--accent-sage);
-}
-
-.nav-lesson-item.completed .check-status {
-  color: var(--accent-sage);
 }
 
 /* --- Main Layout --- */
@@ -282,38 +245,12 @@ a:hover {
   height: 100%;
   width: 0%;
   background: var(--gradient-brand);
-  transition: width 0.5s ease;
 }
 
 .progress-text {
   font-size: 0.825rem;
   font-family: var(--font-heading);
   color: var(--text-secondary);
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.btn-icon {
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-color);
-  color: var(--text-primary);
-  width: 38px;
-  height: 38px;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all var(--transition-fast);
-}
-
-.btn-icon:hover {
-  border-color: var(--accent-sage);
-  color: var(--accent-sage);
 }
 
 .content-container {
@@ -323,7 +260,7 @@ a:hover {
   width: 100%;
 }
 
-/* --- Literary Cards --- */
+/* --- Cards & Badges --- */
 .lesson-card {
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-color);
@@ -332,15 +269,6 @@ a:hover {
   margin-bottom: 36px;
   box-shadow: var(--shadow-md);
   position: relative;
-}
-
-.lesson-card::after {
-  content: '🍃';
-  position: absolute;
-  top: 24px;
-  right: 28px;
-  font-size: 1.5rem;
-  opacity: 0.4;
 }
 
 .lesson-meta {
@@ -373,14 +301,63 @@ a:hover {
   line-height: 1.35;
 }
 
-/* Mental Model Box (文青典雅引言) */
+/* 🧭 新手迷航指南卡 */
+.compass-card {
+  background: linear-gradient(135deg, rgba(91, 112, 82, 0.08) 0%, rgba(194, 139, 56, 0.08) 100%);
+  border: 1px solid var(--accent-sage);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  margin-bottom: 32px;
+}
+
+.compass-header {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent-sage);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.compass-steps {
+  display: grid;
+  gap: 10px;
+}
+
+.compass-step-item {
+  background-color: var(--bg-secondary);
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.compass-step-num {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--accent-ochre);
+  background-color: var(--bg-tertiary);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+}
+
+/* 📜 詩意引言框 (Mental Model) */
 .mental-model-box {
   background-color: var(--bg-tertiary);
   border-left: 4px solid var(--accent-sage);
   border-radius: var(--radius-md);
-  padding: 22px 28px;
+  padding: 24px 28px;
   margin-bottom: 12px;
-  position: relative;
 }
 
 .mental-model-header {
@@ -389,16 +366,14 @@ a:hover {
   font-weight: 700;
   color: var(--accent-sage);
   margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 .mental-model-text {
-  font-size: 0.95rem;
+  font-family: var(--font-heading);
+  font-size: 1.025rem;
   color: var(--text-primary);
   white-space: pre-line;
-  line-height: 1.8;
+  line-height: 1.85;
 }
 
 /* Headings */
@@ -415,7 +390,6 @@ a:hover {
   padding-bottom: 8px;
 }
 
-/* Objectives List */
 .objectives-list {
   list-style: none;
   display: grid;
@@ -446,19 +420,12 @@ a:hover {
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   padding: 20px;
-  transition: all var(--transition-fast);
-}
-
-.evidence-card:hover {
-  border-color: var(--accent-sage);
-  transform: translateY(-2px);
 }
 
 .evidence-level {
   font-size: 0.725rem;
   font-weight: 700;
   color: var(--accent-ochre);
-  text-transform: uppercase;
   margin-bottom: 6px;
 }
 
@@ -470,18 +437,15 @@ a:hover {
 }
 
 .evidence-quote {
+  font-family: var(--font-heading);
   font-style: italic;
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   color: var(--text-secondary);
   background-color: var(--bg-tertiary);
-  padding: 10px 14px;
+  padding: 12px 16px;
   border-radius: var(--radius-sm);
   border-left: 2px solid var(--accent-purple);
   margin-bottom: 12px;
-}
-
-.evidence-link {
-  font-size: 0.825rem;
 }
 
 /* Dual Guide Container */
@@ -513,7 +477,6 @@ a:hover {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  transition: all var(--transition-fast);
 }
 
 .tab-btn.active {
@@ -549,7 +512,7 @@ a:hover {
   background-color: var(--bg-tertiary);
   border: 1px solid var(--border-color);
   color: var(--accent-sage);
-  border-radius: var(--radius-full);
+  border-radius: 50%;
   font-family: var(--font-heading);
   font-weight: 700;
   display: flex;
@@ -566,6 +529,96 @@ a:hover {
   border-radius: var(--radius-sm);
   font-size: 0.875rem;
 }
+
+/* ==========================================================================
+   🎨 視覺化 UI 操作圖解卡 (Visual Operation Diagrams)
+   ========================================================================== */
+.ui-diagram-card {
+  background-color: #21252b;
+  border: 1px solid #181a1f;
+  border-radius: var(--radius-md);
+  margin: 20px 0;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  color: #abb2bf;
+  font-family: var(--font-main);
+}
+
+.ui-diagram-window-header {
+  background-color: #1b1d23;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #181a1f;
+}
+
+.window-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.dot.red { background-color: #ff5f56; }
+.dot.yellow { background-color: #ffbd2e; }
+.dot.green { background-color: #27c93f; }
+
+.window-title {
+  font-size: 0.75rem;
+  color: #828997;
+  font-family: var(--font-code);
+  margin-left: 8px;
+}
+
+.ui-diagram-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ui-flow-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 0.875rem;
+}
+
+.ui-btn-target {
+  background-color: #2c313a;
+  border: 1px solid #4b5263;
+  color: #61afef;
+  font-family: var(--font-code);
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 0 10px rgba(97, 175, 239, 0.2);
+}
+
+.ui-arrow {
+  color: #e5c07b;
+  font-weight: 700;
+}
+
+.terminal-line {
+  font-family: var(--font-code);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.terminal-line .cmd { color: #98c379; }
+.terminal-line .param { color: #d19a66; }
+.terminal-line .out { color: #abb2bf; }
+.terminal-line .add { color: #98c379; }
+.terminal-line .del { color: #e06c75; }
 
 /* Quiz Card */
 .quiz-card {
@@ -597,21 +650,13 @@ a:hover {
   color: var(--text-primary);
   text-align: left;
   font-size: 0.925rem;
-  font-family: var(--font-main);
   cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.quiz-option-btn:hover {
-  border-color: var(--accent-sage);
-  background-color: rgba(91, 112, 82, 0.08);
 }
 
 .quiz-option-btn.correct {
   background-color: rgba(91, 112, 82, 0.18) !important;
   border-color: var(--accent-sage) !important;
   color: var(--accent-sage);
-  font-weight: 600;
 }
 
 .quiz-option-btn.wrong {
@@ -678,7 +723,6 @@ a:hover {
   border-radius: var(--radius-md);
   color: var(--text-primary);
   font-size: 0.9rem;
-  font-family: var(--font-main);
   margin-bottom: 16px;
 }
 
@@ -692,15 +736,9 @@ a:hover {
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
-  transition: all var(--transition-fast);
   display: inline-flex;
   align-items: center;
   gap: 8px;
-}
-
-.btn-primary:hover {
-  background-color: var(--accent-sage-hover);
-  transform: translateY(-1px);
 }
 
 .btn-secondary {
@@ -713,12 +751,6 @@ a:hover {
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.btn-secondary:hover {
-  border-color: var(--border-highlight);
-  background-color: var(--bg-secondary);
 }
 
 .lesson-footer-nav {
@@ -729,12 +761,262 @@ a:hover {
   border-top: 1px dashed var(--border-color);
 }
 
+/* ==========================================================================
+   🗺️ 全景學習流程圖 (Roadmap Flow Container Styles)
+   ========================================================================== */
+.roadmap-flow-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.roadmap-phase-card {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.phase-number {
+  background-color: rgba(91, 112, 82, 0.12);
+  color: var(--accent-sage);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+}
+
+.phase-title {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.phase-nodes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.roadmap-node {
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.roadmap-node:hover {
+  border-color: var(--accent-sage);
+  background-color: rgba(91, 112, 82, 0.1);
+  transform: translateY(-2px);
+}
+
+.node-badge {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: var(--accent-ochre);
+}
+
+.node-text {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.roadmap-arrow {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.phase-connector-down {
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  color: var(--accent-sage);
+  font-weight: 600;
+}
+
+/* Gemini Float Button */
+.gemini-float-btn {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 200;
+  background: var(--gradient-gemini);
+  color: #ffffff;
+  border: none;
+  padding: 14px 22px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gemini-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+  z-index: 300;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.gemini-modal-overlay.active {
+  display: flex;
+}
+
+.gemini-modal {
+  width: 90%;
+  max-width: 680px;
+  max-height: 85vh;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-highlight);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.gemini-modal-header {
+  padding: 20px 24px;
+  background: var(--gradient-gemini);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gemini-modal-title {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gemini-modal-close {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.gemini-modal-body {
+  padding: 24px;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.gemini-chat-log {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: 380px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.chat-bubble {
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  font-size: 0.925rem;
+  line-height: 1.6;
+  max-width: 85%;
+}
+
+.chat-bubble.ai {
+  background-color: var(--bg-tertiary);
+  border-left: 3px solid var(--accent-sage);
+  align-self: flex-start;
+  color: var(--text-primary);
+}
+
+.chat-bubble.user {
+  background: var(--gradient-gemini);
+  color: #ffffff;
+  align-self: flex-end;
+}
+
+.gemini-prompt-shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.prompt-btn {
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.gemini-input-area {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.gemini-input {
+  flex: 1;
+  padding: 12px 16px;
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.btn-gemini-send {
+  background: var(--gradient-gemini);
+  color: #ffffff;
+  border: none;
+  padding: 0 20px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+}
+
 @media (max-width: 900px) {
   .sidebar {
     transform: translateX(-100%);
-  }
-  .sidebar.open {
-    transform: translateX(0);
   }
   .main-wrapper {
     margin-left: 0;
